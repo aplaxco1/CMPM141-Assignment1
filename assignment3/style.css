@@ -7,4 +7,17 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: rgb(55, 60, 65);
+}
+
+a:link {
+  color: white;
+}
+
+a:visited {
+  color: grey;
+}
+
+a:hover {
+  color: lightsteelblue;
 }
