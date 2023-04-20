@@ -2,27 +2,68 @@
 let enemy_prompt_button;
 let event_prompt_button;
 
+// JSON TRACERY GRAMMARS
+const enemyPromptJSON = {
+    // placeholder stuff
+    "origin": ["#enemy#"],
+    "enemy": ["dragon", "slime", "undead", "ghost", "basilisk", "goblin", "beast"]
+};
+
+const eventPromptJSON = {
+    // placeholder stuff
+    "origin": ["#event#"],
+    "event": ["you trigger a trap", "you are teleported back to the entrance of the labyrinth", "you encounter on object from your past",
+    "you lose conciousness", "you see a ghost"]
+};
+
 // SETUP FUNCTION
 function setup() {
-    createCanvas(900, 700);
+    createCanvas(900, (windowHeight - 20));
+    //background(55, 60, 65);
+    background(0);
     enemy_prompt_button = new Button('Generate Enemy', 0);
     event_prompt_button = new Button('Generate Character Event', 1);
 }
 
 // DRAW FUNCTION
 function draw() {
-    background(55, 60, 65);
-
     enemy_prompt_button.display();
     enemy_prompt_button.update();
     event_prompt_button.display();
     event_prompt_button.update();
-
 }
 
 // CLASSES/FUNCTIONS
 function mousePressed() {
+    if (enemy_prompt_button.mouseOnButton()) {
+        background(0);
+        enemy_prompt_button.display();
+        event_prompt_button.display();
+        let display = generateGrammar(enemyPromptJSON);
+        textAlign(CENTER, CENTER);
+        rectMode(RADIUS);
+        textSize(25);
+        fill(255);
+        text(display, 0, 0, (width - 40), (height - 100));
+    }
+    else if (event_prompt_button.mouseOnButton()) {
+        background(0);
+        enemy_prompt_button.display();
+        event_prompt_button.display();
+        let display = generateGrammar(eventPromptJSON);
+        textAlign(CENTER, CENTER);
+        rectMode(RADIUS);
+        textSize(25);
+        fill(255);
+        text(display, 0, 0, (width - 40), (height - 100));
+    }
 }
+
+function generateGrammar(file) {
+    let textGrammar = tracery.createGrammar(file);
+    let text = textGrammar.flatten("#origin#");
+    return text;
+  }
 
 class Button {
     constructor(text, num) {
@@ -58,6 +99,7 @@ class Button {
     display() {
         noStroke();
         fill(this.currColor[0], this.currColor[1], this.currColor[2]);
+        rectMode(CORNER);
         rect(this.x, this.y, this.width, this.height);
         textAlign(CENTER, CENTER);
         textSize(15);

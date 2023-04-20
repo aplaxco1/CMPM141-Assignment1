@@ -21,3 +21,7 @@ a:visited {
 a:hover {
   color: lightsteelblue;
 }
+
+::selection {
+    background: transparent;
+  }
