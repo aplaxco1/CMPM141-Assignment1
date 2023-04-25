@@ -1,4 +1,4 @@
-// Assignment 4: Narrative Dialouge Trees in Ink
+// Assignment 4: Narrative Dialog Trees in Ink
 
 This is all sample text to make sure that the webpage works.
 
@@ -7,6 +7,6 @@ This is all sample text to make sure that the webpage works.
 * I'm pretty sure it works!
     That's pretty awesome!
     
-- That's all for now
+- That's all for now.
 
 -> END
