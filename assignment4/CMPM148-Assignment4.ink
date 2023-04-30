@@ -189,7 +189,7 @@ Right now, you're sitting in the...
      =mealDiversion
         She pauses for a moment.
         "Hey, this is a bit... romantic don't you think?" She says teasingly, winking over at you from across the candle-lit table.
-            {boldness >= 2: 
+            {boldness >= 3: 
             * [Agree.]
             "It... it actually kinda is. I never really thought about it before, but-" you stop in your tracks, realising to what you admitted.
             Looking accross the table, {charName}'s cheeks are bright red as she stares down intensely at her plate. After a moment she seems to brush it off and looks back up at you smiling.
@@ -282,9 +282,9 @@ Right now, you're sitting in the...
         "Hey {charName}"
         She takes her attention away from her book, placing it down on the bed next to her, and turns towards you, "What is it?"
         {affection >= 6 and discontentment <= 0: With her gaze fixed fully on you, her eyes looked so pretty.}
-            {boldness >= 5 and affection >= 6 and awkwardness <= 0 and discontentment <= 0 and obliviousness <= -2 :
+            {boldness >= 4 and affection >= 6 and awkwardness <= 0 and discontentment <= 0 and obliviousness <= -2 :
             * [Kiss her.]
-                You couldn't really help yourself, after everything today, after the thought of her leaving without you getting the chance to do this. Deep down, you realise you wanted to for a really long time.
+                You couldn't really help yourself, after everything today, after the thought of her leaving without you getting the chance to do this. Deep down, you realize you wanted to for a really long time.
                 You kiss her. And she kisses you back, without hesitation. She too, hand been hoping for this, though she'd been afraid to say anything for the longest time.
                 When you pull away, you take a long look at her face.
                 "I'll miss you so much," you say breathlessly.
