@@ -1,0 +1,1 @@
+var storyContent = ﻿{"inkVersion":20,"root":[[{"->":"Begining"},["done",{"#f":5,"#n":"g-0"}],null],"done",{"Begining":["end",{"#f":1}],"global decl":["ev",0,{"VAR=":"failed_loops"},"/ev","end",null],"#f":1}],"listDefs":{}};
