@@ -113,7 +113,7 @@ p {
 
 a {
     font-weight: 700;
-    color: #b97c2c;
+    color: lightblue;
     font-family: sans-serif;
     transition: color 0.6s;
     text-decoration: none;
@@ -237,7 +237,7 @@ body.dark {
 }
 
 .dark a {
-    color: #cc8f1a;
+    color: lightblue;
     transition: color 0.6s;
 }
 
