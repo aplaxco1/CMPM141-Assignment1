@@ -10,7 +10,7 @@ VAR char2 = "Aeula"
 
 // VARIABLES
 // variables which persist across loops
-LIST knowledge = timeLoop, bird, lostWeapon, monsterLocation, job1Failed, job1Success, job1Assassin, job2Failed, job2Success, job2Assassin, assassinAppearance
+LIST knowledge = bird, lostWeapon, monsterLocation, job1Failed, job1Success, job1Assassin, job2Failed, job2Success, job2Assassin, assassinAfterYou, assassinAppearance, needHelp, birdLocation, color
 VAR killed_by_assassin = 0
 VAR checking_char2_ranking = false
 // variables used per each loop that reset
@@ -18,6 +18,12 @@ VAR actions_this_loop = 0
 VAR has_weapon = false
 VAR face_cut = false
 VAR previous_death = "default"
+VAR char1_in_party = false
+VAR char2_in_party = false
+VAR looking_for_bird = false
+VAR bird_found = false
+VAR questions_right = 0
+VAR char2_rejected = false
 
 
 // STORY CONTENT
@@ -32,11 +38,42 @@ VAR previous_death = "default"
 ~actions_this_loop = 0
 ~has_weapon = false
 ~face_cut = false
+~char1_in_party = false
+~char2_in_party = false
+~looking_for_bird = false
+~bird_found = false
+~questions_right = 0
+~char2_rejected = false
 // begining of time loop
-When you awaken, still bleary eyed, you are met with the sight of the half-rotted wooden ceiling of the inn that you'd spent the night in, sunlight staring to stream in from the window. {wakeUp == 3: Okay, all of this was starting to get a bit repetitive. Even now, you could still feel those faint traces of pain in your body from that part of your dream before you woke up.<br><br>No, this couldn't have been a dream. A dream inside a dream? Were you still dreaming now? There's no way it was possible.}{wakeUp <= 2: You sit up in the creaking bed, your head still{wakeUp == 1: pounding from the night before. Yeah, you might have went just a bit overboard. You don't really remember anything that happened last night other than the fact that you definitely spent all of the money you had gotten from that last job you did. Already. And probably then some. |{wakeUp==2: - wait. <br><br> Actually, your head didn't really hurt all that bad. Which was suprising considering the night before. But, even though your head wasn't hurting,{previous_death == "assassin": you could still feel this intense stabbing pain in your chest.}{previous_death == "monsters": you could still feel this intense stinging pain lacing all throughout your back.}{previous_death == "mercenary": you could still feel just the slightest twinge of pain arching across your neck.} But, why was that? You think back to the last thing you remember. Although a bit foggy, you could still remember pieces of that dream you had. Hadn't you... died at the end of that dream, just before you woke up? You can just barely remember it. Sure, it had felt pretty damn realistic, but why were you still feeling that pain now? Strange.}}}
-You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeUp > 1:, your body still aching all over}. {wakeUp == 1: You stand up for a moment, waiting for the pain in your head to subside. You stand there, just staring at the wall, swaying slightly, eyes half closed with a blank expression on your face. When you think you've mustered enough strength, you take a step. But you're immediately met with the hard wooden floor as your legs give out from under you.<br><br>"Well shit," you mutter under your breath, the sound muffled by your face pressed against the floor.|{wakeUp == 2: Really, why didn't your head hurt but everywhere else did? What did you do last night? You think about that dream again. It really was so strange. You shake off the memory and decide to go downstairs and head out for the day. You needed to try and get more money after you blew it all off yesterday.}}
+{previous_death == "char2": Your eyes snap open and you fly upwards in bed gasping for air. What had even happened? The last thing you remember is talking to {char2} but then she got angry at you and then-<br><br>Did she... did she actually kill you? Seriously? Well, at least it wasn't the assassin who killed you this time, you think, sighing out loud. You make a note not to piss her off again. |When you awaken, still bleary eyed, you are met with the sight of the half-rotted wooden ceiling of the inn that you'd spent the night in, sunlight staring to stream in from the window. {wakeUp > 3: This was starting to get a bit tiring. {wakeUp > 6: You honestly wanted to just lie in bed and not have to deal with this day ever again, but you needed to deal with this somehow or it was never going to end.{killed_by_assassin > 6: This assassin was really getting on your nerves. Why did they want you dead so badly? And why were they so damn strong?}}}{wakeUp == 3: Okay, all of this was starting to get a bit repetitive. Even now, you could still feel those faint traces of pain in your body from that part of your dream before you woke up.<br><br>No, this wasn't a dream. It was something else, it had to be.}{wakeUp <= 2: You sit up in the creaking bed, your head still{wakeUp == 1: pounding from the night before. Yeah, you might have went just a bit overboard. You don't really remember anything that happened last night other than the fact that you definitely spent all of the money you had gotten from that last job you did. Already. And probably then some. |{wakeUp==2: - wait. <br><br> Actually, your head didn't really hurt all that bad. Which was suprising considering the night before. But, even though your head wasn't hurting,{previous_death == "assassin": you could still feel this intense stabbing pain in your chest.}{previous_death == "monsters": you could still feel this intense stinging pain lacing all throughout your back.}{previous_death == "mercenary": you could still feel just the slightest twinge of pain arching across your neck.} But, why was that? You think back to the last thing you remember. Although a bit foggy, you could still remember pieces of that dream you had. Hadn't you... died at the end of that dream, just before you woke up? You can just barely remember it. Sure, it had felt pretty damn realistic, but why were you still feeling that pain now? Strange.}}}}
+You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeUp > 1:, your body still aching all over}. {wakeUp == 1: You stand up for a moment, waiting for the pain in your head to subside. You stand there, just staring at the wall, swaying slightly, eyes half closed with a blank expression on your face. When you think you've mustered enough strength, you take a step. But you're immediately met with the hard wooden floor as your legs give out from under you.<br><br>"Well shit," you mutter under your breath, the sound muffled by your face pressed against the floor.|{wakeUp == 2: Really, why didn't your head hurt but everywhere else did? What did you do last night? You think about that dream again. It really was so strange. You shake off the memory and decide to go downstairs and head out for the day. You needed to try and get more money after you blew it all off yesterday.}}{wakeUp == 3: Well, if none of this was a dream, what were you supposed to do? {knowledge ? job1Success and not (knowledge ? job2Success): You had tried doing that monster hunting job, and even though you had been able to take those monsters down it, you ended getting stabbed in the back. You suppose your only choice now it to try that other job.}{knowledge ? job2Success and not (knowledge ? job1Success): You had tried dealing with that mercenary, and even though you'd managed to do it, you just ended up getting stabbed in the back. You suppose your only choice now was to try and do that other job.}{not (knowledge ? job1Success) and not (knowledge ? job2Success): You still haven't even managed to complete either of those jobs yet. Surely with the knowledge you have now you ought to be able to complete at least one of them.}}
+{wakeUp > 3 and not (knowledge ? assassinAfterYou): 
+You still needed to figure something out. 
+{knowledge ? job1Success and not (knowledge ? job2Success): You had tried doing that monster hunting job, and even though you had been able to take those monsters down it, you ended getting stabbed in the back. You suppose your only choice now it to try that other job. You needed, at the very least, to confirm wether whoever had stabbed you in the back was actually being sent after you or not.}
+{knowledge ? job2Success and not (knowledge ? job1Success): You had tried dealing with that mercenary, and even though you'd managed to do it, you just ended up getting stabbed in the back. You suppose your only choice now was to try and do that other job.  You needed, at the very least, to confirm wether whoever had stabbed you in the back was actually being sent after you or not.}
+{not (knowledge ? job1Success) and not (knowledge ? job2Success): You still haven't even managed to complete either of those jobs yet. Surely with the knowledge you have now you ought to be able to complete at least one of them without getting killed.}
+}
+{knowledge ? (job1Success, job2Success) and not (knowledge ? assassinAppearance): 
+At this point, you were sure, absolutely sure that an assassin was after you.
+~knowledge += assassinAfterYou
+There wasn't a doubt in your mind anymore. Even after completed both of the jobs, that dammned assassin STILL found you.
+If you were going to do anything about it, you needed to find out what they looked like. Maybe, just one more time, you ought to tempt them into killing you, that might be the best shot that you had. To try and get a glance at them before they finished you off so that the next time you enetered one of these loops, you might try to find them before they find you.
+}
+{knowledge ? assassinAppearance and not (knowledge ? needHelp):
+This time. This time you knew what they looked like. Not completely, but it was enough. Enough to try and find out who they were. During this loop, you'd find them and put an end to this, you swore it.
+}
+{knowledge ? needHelp and searchForBird == 0 and tavern == 0: You'd been so foolish. So foolish to think you could take them out on your own. They were stronger than you'd anticipated. If you wanted to stand a chance, you couldn't do this alone. You needed to find help.}
+{previous_death == "killed_with_char1": You can't get the sight of {char1} collapsed onto the ground lifeless out of your head. And it had been all your fault. If you were going to find help, you needed more that just his help.}
     + {wakeUp == 1} [Come on, get up.]
     -> introMonolouge
+    + (GrabWeapon) {wakeUp > 2} [Grab your weapon first.]
+    ~has_weapon = true
+    {wakeUp == 3 or GrabWeapon == 1: 
+    You didn't have your weapon on you, you would definitely need that before you left. Looking under the bed, you find it just lying there. You pick it up and sheath it at your waist before you head out for the day.
+    - else:
+    With a sigh, you reach under the bed and pick up your dagger, sheathing it at your waist. Same old motions, over and over.
+    }
+    -> HeadOut
     + {wakeUp > 1} [Head out for the day.]
     -> HeadOut
     - (introMonolouge)
@@ -85,14 +122,48 @@ You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeU
             You barely register them saying "Next time I won't miss!" before you push open the door to the outside.
                 + + + + [Head out to the center of town.]
                 -> townCenter
-        }
-        {wakeUp > 2:
+        - else:
+        {wakeUp > 2 and wakeUp < 10:
+        You sigh. Not this again.
+        + + + [Take a step back.]
+        ~face_cut = false
+        You take a step back before the innkeeper's dagger can graze your face.
+        They yell at you for not paying them.
+        You simply walk past them with a "Yeah, don't worry about it."
+        They glare at you, but you just keep walking.
+        Is this just going to happen every single time?
+        + + + + [Head out to the center of town.]
+                -> townCenter
+        + + + [Run past.]
+        ~face_cut = false
+        This time, you take a chance and just run straight past them, and fling open the door, burting outside before they have the chance to hit you.
+        Just as you shut the door to the inn, you feel a thud. They had actually just thrown the knife at the door.
+        + + + + [Head out to the center of town.]
+                -> townCenter
+        + + + [Just let them hit you.]
+        ~face_cut = true
+        You don't even bother dodging it. You let the knife fly right past your face and graze you.
+        That stinging pain serves as a reminder that you're still miraculously alive, and likely will be until you figure out what's going on.
+        Before they have the chance to yell at you, you yell first.
+        "I'll pay you back as soon as I can!"
+        They hmph at you, "Next time I won't miss!"
+        Oh but they would. They would miss every time.
+        "Mhm," you reply and walk out the front door.
+        + + + + [Head out to the center of town.]
+                -> townCenter
+        - else:
+        Actually, you really just couldn't deal with that innkeeper anymore. Instead of heading downatairs, you simply choose to climb out of your room's window and land on the street below. With that, you head over to the center of town.
         -> townCenter
+        }
         }
         }
         
     = townCenter
     You find yourself standing out in the center of town. You stretch out your limbs, still a bit stiff from sleeping on that rock hard bed. Looking around you see its as busy as usual, even this early in the morning. 
+    {wakeUp > 2: 
+    You spotted {char1} off in the distance. He was bound to run into you if you weren't paying attention, and you really didn't feel like getting run into anymore, even by {char1} as sweet as he was, so make sure to pay careful attention to not letting him run into you.{wakeUp == 3 or not (knowledge ? assassinAfterYou): Right now, you needed to focus on trying to get one of those jobs done. Yes they had gotten you killed twice before, but you weren't giving up just yet.}{knowledge ? assassinAfterYou and not (knowledge ? assassinAppearance): Right now, you needed to figure out what that assassin looked like, even if with just a glance. Unfortunately for you that means you'd have to get yourself killed by them again.}{knowledge ? assassinAppearance and not (knowledge ? needHelp): Your next step was try try and figure out who that assassin was and why they were after you. That means you'd have to try and find them before they found you. In a town full of assassins, surely that would be possible.}{knowledge ? needHelp: You'd tried to deal with that assassin on your own before, but you knew how badly that had gone. You think about it for a long time, but really, you were going to need some help. {char1} was probably your best bet.}
+    -> townCenterOptions
+    }
     {wakeUp == 1:
     There are several different shops lined up around the square, most of which were either selling weapons, armor, poisons, and a variety of other different tools of destruction. Of the surrounding buildings, they mostly consisted of taverns and gambling dens, a few blacksmiths, and even a few fighting arenas. There was also a bakery. Probably one of your favorite places to go when you actually had money.
     Of course, the only people out and about were all members of the guild. Loitering around the shops, cleaning and sharpening their weapons, or just leaning against walls looking menacing. Some were fighting. There was someone lying on the ground, and you weren't entirely sure if they were still alive.
@@ -116,7 +187,7 @@ You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeU
             -> headQuarters
     }
     }
-        + [Head to the Guild Headquarters.]
+        + {wakeUp <= 2} [Head to the Guild Headquarters.]
         As you start walking in the direction of HQ, you feel something collide into you, hard, sending you spiralling backwards, your arms windmilling to try and regain your balance. But of course, you land on the cobbletstone ground with a thud, dust billowing up around you.
         {wakeUp == 1: How many more times was this going to happen to you today?}
         "Oh, hey {protag}, didn't see you there!"
@@ -193,13 +264,35 @@ You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeU
             -> headQuarters
             }
             }
+            
+    = townCenterOptions
+    {char1_in_party: "So, {protagNickname}, where are we going next?" {char1} asks. {char1bird} lets out a questioning caw from his shoulder.}
+    {char2_in_party: {char2} stands a bit farther away, crossing her arms, "Its up to you {protag}."}
+        + [Head to Headquarters.]
+        -> headQuarters
+        + {knowledge ? assassinAppearance} [Search the town for the Assassin.]
+        -> assassinSearch
+        + {knowledge ? needHelp and not char2_in_party} [Head to Tavern to search for help.]
+        -> tavern
+        + {knowledge ? needHelp and not char1_in_party} [{bird_found: Give {char1} his bird. | Ask {char1} for help.}]
+        -> talkToChar1
+        + {(talkToChar1 > 1 or looking_for_bird) and not bird_found} [Look for {char1}'s bird.]
+        -> searchForBird
+        + {not has_weapon} [Grab your dagger first.]
+        You'd... left your dagger in your room again. Really?
+        You sigh at your idiocy, and head back to the inn to get your dagger back.
+        desperate to avoid the tormet of the innkeeper, you climb through a window to get back into your room and grab your dagger before returning back to the town center.
+        ~has_weapon = true
+        -> townCenterOptions
     
     = headQuarters
         You head inside the spacious office building. {wakeUp == 1: For as much money that the guild raked in, or at least you assumed, the interior of their headquarters certainly didn't reflect it. To be completely honest, the buldiding looked abandonded and completely trashed. You weren't entirely sure who managed any of the legislative stuff in the guild, it was all pretty secrative. You only really joined as a means for you to make money and find jobs easier. Well that, and, now that you'd joined it you couldn't exactly leave. They didn't treat desertion very lightly.}
         There are a few people inside, who all turn their heads in your direction when you enter. Not exactly welcoming either. {wakeUp <= 3: You smile at them nervously as you pass. {wakeUp == 3: You're really starting to get tired of the fake humility though.} | {wakeUp <= 5: You've stopped bothering to aknowledge them anymore. Whatever, let them have their way, you're too tired to deal with it anymore. | You stare back at a few of them, glaring. They really were annoying.}} On the back wall, there are a couple boards set up, used for job postings and also to list the current rankings.
+        {char2_in_party: "What are we doing here? I thought we needed to deal with that assassin friend of yours {protag}," {char2} complains.<br><br>"I guess he just had something to do in here," {char1} says shrugging. <br><br>{char1bird} caws tiredly.}
         - (HQoptions)
-        + [Check the current job listings.]
-        You walk up to one of the boards set up with all of the current job listings. There's the usual: assasinations of high ranking officials in nearby towns, bounties out for escaped and on-the-run convicts, and even a couple up for monsters lurking in nearby forests terrorizing townsfolk. {wakeUp == 1: 
+        + {not char1_in_party} [Check the current job listings.]
+        You walk up to one of the boards set up with all of the current job listings. There's the usual: assasinations of high ranking officials in nearby towns, bounties out for escaped and on-the-run convicts, and even a couple up for monsters lurking in nearby forests terrorizing townsfolk. {wakeUp > 2: It really is exactly the same every time, and you're only qualified for the same two options. You sigh.}
+        {wakeUp == 1: 
         Unfortunately for you, a vast majority of these were definitely way too much for your skill set. You narrow down a couple that you might choose from- in other words, the ones you probably won't die try to do - all of which not really giving much reward money, but better than nothing.
         The first job listing in just a simple monster hunt. Theres a pack of beasts somewhere out in the woods that needs dealing with. Simple enough, and it doesn't look like anyone's taken this one yet. 
         The second one is a little bit trickier. This one involves hunting down a mercenary. It doesn't state what he did, just that there is a bounty out for his head. The reward money isn't all that much so you figure he probably isn't too big of a threat and you might be able to handle it. Plus the pay was slightly higher than the other one.
@@ -209,15 +302,21 @@ You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeU
         And once again, the only options that seemed reasonable were the monster hunt - the same type of monster from that dream of course - and the bounty out on that mercenary - again, with the same description from the dream. Maybe you ought to stop referring to it as a dream. A vision more like it.
          {jobOne == 1: You shudder thinking back to that monster hunt job from that vision. {previous_death == "monsters": The way that those monsters tore right through you with ease. More nauseatingly, you think to how they probably ate your corpse afterwards, or tried to, and shudder at the thought. Yeah, no thank you.}{previous_death == "assassin": You can barely remember it, but you'd been stabbed, right through the chest, from behind. Who was that anyways? That was so random. Was it some kind of vision metaphor? Like it was telling you how dumb you were for not checking the location of the monster first?} Maybe that vision was a sign to take the other job, you'll probably have more luck with it anyways. {has_weapon: Although, now you did actually have your dagger this time. That might make the whole situation a bit easier to deal with.}}
          {jobTwo == 1: Thinking back on that vision, you remember how poorly the whole situation with the second job had went. {previous_death == "mercenary": You couldn't even handle the mercenary in that vision. Though to be fair, maybe you'd just said the wrong thing. You think back to what you'd said and grimace. That WAS pretty stupid.}{previous_death == "assassin" and HelpChildren: You'd risked helping out those kids. And though you had, you ended up getting stabbed in the back anyways! Which was really weird? Who even was that? Maybe it was some type of weird vision metaphor. Like trying to save people was some waste of time. But that seemed pretty messed up.}{previous_death == "assassin" and not HelpChildren: You'd managed to overpower that mercenary, even without a weapon, but were still stabbed in the back! Maybe it was whoever that man had talked to in that tavern, though something about his expression made it seem like he didn't recognize the person.}{has_weapon: Although, now you did have your dagger with you, which might solve some of your problems.}}
+         - else:
+         {not (knowledge ? job1Success) and not (knowledge ? job2Success): You still hand't been able to accomplish either of the two jobs available to you. Even after multiple attempts. You ought to try again, especially with what you now know.}
+         {knowledge ? job1Success and not (knowledge ? job2Success): You'd already tried the monster hunting job, and had succeeeded, only to get stabbed in the back by that assassin. If you wanted to be sure that that assassin really WAS after you, you needed to try and get that other job done. Otherwise, you might just be missing an opportunity to get out of this horrid time loop.}{knowledge ? job2Success and not (knowledge ? job1Success): You'd already tried dealing with that mercenary, and had succeeeded, only to get stabbed in the back by that assassin. If you wanted to be sure that that assassin really WAS after you, you needed to try and get that other job done. Otherwise, you might just be missing an opportunity to get out of this horrid time loop.}{knowledge ? assassinAfterYou and not (knowledge ? assassinAppearance): Just one more time. One more timed you needed to run into that assassin. This time, you use the opportunity to try and see what they looked like. That did mean however, that whichever choice you made, you had to make sure that the assassin would find you before anything else killed you.}{knowledge ? assassinAppearance and not (knowledge ? needHelp): You knew what that assassin looked like, at least for the most part. You could still see those cold silver eyes and that long black hair. Going back out on a job wouldn't get you money you knew that, it would just get you killed. What you needed to focus on now, was finding that assassin before they had the chance to find you.}{knowledge ? needHelp: Why were you still here? Were you just itching to get killed again? What you really needed to do now, if you ever hoped to make it out of this time loop, was find someone who would help you fight off that assassin.}
         }
         }
+            + + {knowledge ? assassinAfterYou} [Decide against it.]
+            To be honest, you'd really rather not have to go out again, probably just to get killed by that assassin again. {not (knowledge ? assassinAppearance): But really, without knowing what they looked like at all, what other choice did you have?}{knowledge ? assassinAppearance: Besides, you had better things to do.}
+            -> HQoptions
             + + [Take the first job. Go on a monster hunt.]
             {wakeUp == 1: -> jobOne}
             {wakeUp == 2 and jobOne == 1: 
-            You know what, you wanted to try this job again. With the warning from that vision, you were sure to not mess it up again. {has_weapon: Especially with your weapon now in your possession. Those monsters{previous_death == "assassin":, or whoever that guy who stabbed you was,} wouldn't be much of an issue.}
+            You know what, you wanted to try this job again. With the warning from that vision, you were sure to not mess it up again.{has_weapon: Especially with your weapon now in your possession. Those monsters{previous_death == "assassin":, or whoever that guy who stabbed you was,} wouldn't be much of an issue.}
             {not (knowledge ? monsterLocation): 
             ~knowledge += monsterLocation
-            Oh, and you ought to check where the monsters actually where this time. There was no way you were going to go to the wrong place again and get stabbed in the chest by that weirdo again. You look a bit more carefully at the job request this time and see that the monsters are located at the lakeside forest. Whoops. 
+            Oh, and you ought to check where the monsters actually where this time. There was no way you were going to go to the wrong place again and get stabbed in the chest again. You look a bit more carefully at the job request this time and see that the monsters are located at the lakeside forest. Whoops. 
             }
             Now, you could always reconsider. The vision did warn you about this job in particular. It would probably be safer to choose the other option.
                 + + + [Go for it.]
@@ -225,6 +324,18 @@ You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeU
                 + + + [Actually, lets try the other job.]
                 -> jobTwo
             - else:
+            {jobOne >= 1 and not (knowledge ? monsterLocation): 
+            ~knowledge += monsterLocation
+            Oh, and you ought to check where the monsters actually where this time. You look a bit more carefully at the job request this time and see that the monsters are located at the lakeside forest. Whoops. 
+            }
+            {knowledge ? assassinAppearance: 
+            You really were just itching to die again. To experience the pain of death all over again. You knew, deep down, it really didn't matter what you chose. With that assassin still after you, there wasn't anything you could do to succeed, but this is still waht you choose to do. To perpetuate the cycle.
+            Unless of course, you choose otherwise. You choose to try and live. To find some other means to end all this.
+                + + + [Try this job once more.]
+                -> jobOne
+                + + + [Try something else.]
+                -> HQoptions
+            }
             -> jobOne
             }
             + + [Take the second job. Hunt down that mercenary.]
@@ -237,6 +348,14 @@ You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeU
                 + + + [Actually, lets try the other job.]
                 -> jobOne
             - else:
+            {knowledge ? assassinAppearance: 
+            You really were just itching to die again. To experience the pain of death all over again. You knew, deep down, it really didn't matter what you chose. With that assassin still after you, there wasn't anything you could do to succeed, but this is still waht you choose to do. To perpetuate the cycle.
+            Unless of course, you choose otherwise. You choose to try and live. To find some other means to end all this.
+                + + + [Try the job once more.]
+                -> jobTwo
+                + + + [Try something else.]
+                -> HQoptions
+            }
             -> jobTwo
             }
         + (Rankings) [Check the Assassin Rankings board.]
@@ -251,7 +370,7 @@ You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeU
             + + (YourRank) [Check where you're ranked.]
             {YourRank == 1: 
             You look at the list, starting at the top. You're eyes scan down the list for a while, looking for your name. Today it looks like you've been ranked at 839th place. Hey, that was up like, 5 more rankings than yesterday! But upon closer inspection you realize there are 30 less people on the list than there were before. Tough competition, you think.
-            At least there were still like 150 people ranked lower than you. Better than nothing you suppose.
+            At least there were still like 160 people ranked lower than you. Better than nothing you suppose.
             - else:
             {YourRank <= 3: Yup, you were still at rank 839.}
             {YourRank > 3: You're still ranked 839th. You shouldn't be suprised.}
@@ -266,13 +385,22 @@ You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeU
             {char1} is still ranked pretty high up in the list, at rank 86. That fact still impresses you.
             }
             -> CheckRankings
-            + + {checking_char2_ranking} [Check {char2}'s ranking.]
+            + + (Char2Rank) {checking_char2_ranking} [Check {char2}'s ranking.]
+            {Char2Rank == 1: 
+            You scan the board looking for {char2}'s name. You find it almost immediately. Oh... OH.
+            She was ranked 8th on the board. 
+            You stand there shocked for a moment. That meant she was in the top 10 of all assassins in the guild. Out of a THOUSAND trained assassin's. And she was ranked 8th? {YourRank: You think back to where you're ranked on the board, extra embarrased. {Char1Rank: Both {char1} and now {char2} were ranked so much higher than you.}}
+            In this case, you really did hope that she'd be willing to help you out. If she was ranked this high, you would'nt have to worry about that assassin at all. Even you were able to last for a few seconds against them, so just imagining how {char2} would fare, you really weren't all that worried.
+            Still though, you would need to actually convince her to help you out first.
+            - else:
+            You look at {char2}'s name on the board. All the way up at 8th place. You really can hardly believe it.
+            }
             -> CheckRankings
             + + [Go somewhere else.]
             -> HQoptions
-        + [Head back out to town.]
-        // add this in later
-            -> END
+        + {wakeUp > 2} [Head back out to town.]
+        You decide to head back out into town and do something else.
+        -> townCenterOptions
     
     
     = DarkForestInterrupt
@@ -338,7 +466,7 @@ You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeU
                     You wait and wait, but nothing shows. For a moment, you think that this might not have been the work of monsters after all. You get up, ready to search somehwere else.
                     -else:
                     {wakeUp > 2: 
-                    You've done this before. You knew the monsters's wouldn't come, but, you knew that HE would. So, rather than waiting for monsters, you waited for that man to show up here at this location to kill you, again.
+                    You've done this before. You knew the monsters's wouldn't come, but, you knew that THEY would. So, rather than waiting for monsters, you waited for that assailent to show up here at this location to kill you, again.
                     - else:
                     You weren't sure why, but you decided you would wait here again, just as you had done in that vision. You remember being stabbed in the back, but this time, you would be ready, or so you hopped. {has_weapon: You clutch onto your dagger, sitting down on a nearby log, and wait.}
                     }
@@ -396,7 +524,7 @@ You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeU
         -> job1Failure
         }
     
-    - (wolfEncounter)
+    = wolfEncounter
     {wolfEncounter == 1:
     But then, just a few feet from you, that snarling sound that you were following starts up again. You look up, slowly, and find yourself face to face with the fangs of a creature, its maw dripping with saliva as it growls at you, its breath stinging your face... wait, this isn't even the monster you were searching for. It was just a regular wolf. Big, with matted fur and razor sharp fangs, but still just a wolf.
     But it wasn't alone. There was a whole group of them, looking equally as vicious standing right behind it.
@@ -436,7 +564,7 @@ You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeU
                 }
                         
                         
-    - (monsterEncounter)
+    = monsterEncounter
     {monsterEncounter == 1:
     Within moments, the sound of those claws against the stone quickens, as you realize the monsters have already started running towards you. You're about to take a step back before you see the heads of those creatures emerge from the shadows. These were definitely the right ones.
     They spot you within moments, their glowing red eyes turning over to you, sending a chill down your spine. This job certainly sounded easy in theory, but you were starting to have doubts.
@@ -476,8 +604,6 @@ You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeU
             This really isn't going to work.
             }
             -> stuckInMud
-            + [Yell for help.]
-            -> Yell1
         + (Yell1) [Yell for help.]
         With not much of an option, you start to yell for help. There probably wasn't anyone nearby, but what other choice did you have? 
         You yell and yell and yell, but no one comes. Its just you and the bugs.
@@ -496,7 +622,7 @@ You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeU
     And then everything turns black.
     {wakeUp == 2: Even after that vision it all ends the same.}
     - else:
-    {jobOneSuccess == 1:
+    {jobOneSuccess == 1 and not (knowledge ? assassinAfterYou):
     That is, until you feel a sharp pain in your chest.
     {killed_by_assassin > 1: There was no way. NO way.}
     "Wha-"
@@ -510,7 +636,7 @@ You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeU
     You could feel it. Well not feel it, but you'd just experienced this enough times by now that you knew.
     That figure was sneaking up behind you at this very moment. You keep listening, trying to determine where they would come from, but you here nothing other than the sounds of the forest.
     Where were they? You could never tell, not until they were practically on top of you.
-    {knowledge ? (job1Success, job2Success) and killed_by_assassin >= 3 and not (knowledge ? assassinAppearance):
+    {knowledge ? assassinAfterYou and not (knowledge ? assassinAppearance):
     At least this time around, you hoped you might get a look at their face. That was your only hope in trying to find them before they found you the next time you woke up.
     }
     And then, the smallest sound, the noise of metal sliding from its sheath directly behind you.
@@ -519,7 +645,7 @@ You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeU
     Their next blow wouldn't miss, even if you knew where it came from, you simply weren't fast enough.
     They strike again before you can even react, sending their blade straight throught your heart once more.
     You cough up blood, it spilling down your front onto the ground below.
-    {knowledge ? (job1Success, job2Success) and killed_by_assassin >= 3 and not (knowledge ? assassinAppearance):
+    {knowledge ? assassinAfterYou and not (knowledge ? assassinAppearance):
     As you vision fades, you take what little time you have to note their appearance before you wake up once more. they were covered from head to toe in a black cloak, a hood over their head and the lower half of their face covered. What you could see though, hidden in that darkness, where a pair of silver eyes filled with malice, and a few strands of black hair.
     When you wake, you pray you might stand a chance of finding them before they get to you. To end this horrid loop.
     ~knowledge += assassinAppearance
@@ -560,7 +686,7 @@ You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeU
             Since you already knew that the mercenary would end up at the tavern later in the day{wakeUp ==2:, as you had seen in that vision,} you decide to loiter nearby during the day, waiting until he finally showed up. Once the sun started to set, you see the man. You hide behind the corner, waiting for him to enter. Just as you are about to follow him inside, you remember.
             A scream. A child's scream. {HelpChildren == 0: You still feel guilty about it, that you hadn't tried to help them before.}
             But now you knew, that mercenary would be there for a while, waiting for that person that he was meeting. So, if you wanted to you could try and save those kids.
-            {HelpChildren > 0: Though from past experience, you remember having gotten stabbed in the back just after saving them. But, maybe it was worth it. {HelpChildren == 1 and not (knowledge ? (job1Success and job2Success)): Besides, this time, at least you knew, and surely would be more prepared.}}
+            {HelpChildren > 0: Though from past experience, you remember having gotten stabbed in the back just after saving them. But, maybe it was worth it. {HelpChildren == 1 and not (knowledge ? (job1Success, job2Success)): Besides, this time, at least you knew, and surely would be more prepared.}}
             }
                 + + (HelpChildren) [Help the children in trouble.]
                 {HelpChildren == 1:
@@ -589,10 +715,10 @@ You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeU
                         Wiping your hands together, you put your hands on your hips, rather proud of yourself, and turn towards the two children.
                         "You two all right?"
                         All they do is look at you, well, more like behind you, a growing fear creeping up on their faces.
-                        You had almost forgotten.
-                        -> job2Failure
+                        {HelpChildren > 1: You had almost forgotten.}
+                            -> job2Failure
                         }
-                        + + + (Fists1) [Go in with your bare-handed.]
+                        + + + (Fists1) [Go in bare-handed.]
                         {has_weapon: Eh, you really didn't need your dagger to deal with this guy. He was just some common theif anyways. {HelpChildren > 1: Which was blatantly clear given the previous times you dealt with this situation.}}
                         Quietly, you sneak up behind the man, whose back is turned to you, and before he has time to realize you're there, you grab the arm holding the knife and slam it into the wall next to you. The knife clatters to the ground, and as he starts to turn around to face you, you take an elbow and slam it into his face. He drops to the floor like a sack of brinks. Wiping your hands together, you put your hands on your hips, rather proud of yourself, and turn towards the two children.
                         "You two all right?"
@@ -715,7 +841,7 @@ You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeU
             You watch as the blade slowly slides backwards. You try to turn your head to see the perpetrator, but your vision fades to black.
             {wakeUp == 2: Even after that vision it all ends the same.}
             - else:
-            {jobTwoSuccess == 1:
+            {jobTwoSuccess == 1 and not (knowledge ? assassinAfterYou):
             As you attempt to make your way back into town having completed the job, you feel a... presence come near you.
             But before you have any time to react, you feel an agonizingly sharp pain stab straight through your chest.
             {killed_by_assassin > 1: It-it couldn't be. Not again. Not after finally getting this job done.}
@@ -729,7 +855,7 @@ You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeU
             You could feel it. Well not feel it, but you'd just experienced this enough times by now that you knew.
             That figure was sneaking up behind you at this very moment. You keep listening, trying to determine where they would come from, but you here nothing other than the sounds of the forest.
             Where were they? You could never tell, not until they were practically on top of you.
-            {knowledge ? (job1Success, job2Success) and killed_by_assassin >= 3 and not (knowledge ? assassinAppearance):
+            {knowledge ? assassinAfterYou and not (knowledge ? assassinAppearance):
             At least this time around, you hoped you might get a look at their face. That was your only hope in trying to find them before they found you the next time you woke up.
             }
             And then, the smallest sound, the noise of metal sliding from its sheath directly behind you.
@@ -738,7 +864,7 @@ You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeU
             Their next blow wouldn't miss, even if you knew where it came from, you simply weren't fast enough.
             They strike again before you can even react, sending their blade straight throught your heart once more.
             You cough up blood, it spilling down your front onto the ground below.
-            {knowledge ? (job1Success, job2Success) and killed_by_assassin >= 3 and not (knowledge ? assassinAppearance):
+            {knowledge ? assassinAfterYou and not (knowledge ? assassinAppearance):
             As you vision fades, you take what little time you have to note their appearance before you wake up once more. they were covered from head to toe in a black cloak, a hood over their head and the lower half of their face covered. What you could see though, hidden in that darkness, where a pair of silver eyes filled with malice, and a few strands of black hair.
             When you wake, you pray you might stand a chance of finding them before they get to you. To end this horrid loop.
             ~knowledge += assassinAppearance
@@ -754,13 +880,580 @@ You try to rub the sleep out of your eyes and roll out of bed with a groan{wakeU
             -> job2Failure
                 
     
+    = assassinSearch
+    {knowledge ? needHelp and not char1_in_party and char2_in_party:
+    Wait, did you really want to try and take on the assassin who's after you without getting any help first? You've tried to do this on your own before and failed. Do you really think you can handle it all by yourself?
+        + [Go back and look for help.]
+        -> townCenterOptions
+        + [Go on by yourself.]
+        -> failure
+    }
+    {not char1_in_party and not char2_in_party: -> failure}
+    {char1_in_party and not char2_in_party: -> duelFailure}
+    {char1_in_party and char2_in_party: -> ending}
+    
+    = failure
+    ~killed_by_assassin += 1
+    {failure == 1:
+    Now knowing a bit about what the assassin actually looks like, you attempt to search around the town to find them. Or at the very least, discover someone fitting that discription who might be following you. You weren't sure if they had been following you from the very start, or as soon as you had stepped out to take on a job, but you were going to find out.
+    You walk around town for a while, simply looking for anyone who might have those silver eyes and black hair, but to no avail.
+    + [Continue]
+    That is, until, out of the corner of your eye, you notice someone looking in your direction. You try not to make it obvious that you noticed them. 
+    They were completely covered in black clothing from head to toe, just like that assassin who'd killed you so many times in previous loops. Granted, this was a town full of assassins, so this type of attire wasn't exactly uncommon, but they were the only person who's attention appeared to be fixed on you. And, trying to take a closer look under that hood, even obscured by shadow, their silver eyes weren't difficult to make out. A shiver runs down your spine, that must be them.
+    There was a street on the other side of town that was usually pretty vacant. A street where the assassin might take a chance to strike. You hoped they wouldn't realize your plan as you start walking in that direction.
+    As you start walking however, and check back to see if they were still following you, they were no longer standing where they once were. Freaky.
+    You contininue to head in that direction until eventually, you get to a part of town thats mostly abandoned.
+    Your heart starts pounding, looking for any sign of that person.
+         + + [Continue]
+         You hear that sound again. The slide of metal against metal, like a weapon being unsheathed.
+         You turn quickly around{has_weapon:, pulling out your dagger to block their strike. Metal clashes against metal, the sound ringing throughout the empty street.| dodging quickly out of the way, narrowly avoiding that deadly sword. Without a weapon, this might be difficult.}
+         "What do you want from me? Why are you trying to kill me?" you shout. You really couldn't fathom why.
+         They don't respond, their cold silver eyes still boring into you from under their hood.
+         They swipe at you with their weapon again. And again and again.{has_weapon: You block some of these, but most of them land, cutting deep into your skin.|You try to dodge some of these, but so many of them land.}
+         They were fast, way too fast. You knew this, and yet.
+         Bloodied and panting, you try to ask them again.
+         But they don't respond. They just land that last final blow, burrying their sword deep into your gut.
+         Pain blooms all around the wound and you collapse to the floor, as your life slowly drains out of you once more.
+         They stand above you, as they always would. You couldn't do this on your own, no matter how hard you tried.
+         ~knowledge += needHelp
+         ~previous_death = "assassin"
+         Your vision fades to black.
+            + + + [Wake up.]
+                -> wakeUp
+        - else:
+        You head straight for a more disterted section of town. You knew that the assassin had been following you, right from the begining and that they would take this opportunity to get rid of you. You just wanted to try again, to test your limits and see if you standed any semblance of a chance against them.
+        You walk until the crowds thin out, and its just you standing in the middle of the wide street. Well. Just you and the assassin that's after you on this endlessly repeating day.
+            + [Continue]
+            "Come out and just try to kill me!" you shout out onto the empty road.
+            For a moment, you thought that might distract them, to stall their attack, but when you turn around, you find them standing opposite of you. Well, at least this time they didn't just try to kill you outright. This time.
+            {has_weapon: You pull out your dagger, ready to fight back even if a part of you knew you would loose anyways, just like before.|You raise your fists (why hadn't you made sure to grab your dagger first?), ready to fight back}
+            But they're on you in an instant, their silver eyes boring into yours. You stumble bakwards a bit, and they take the chance to strike out with their sword.
+            {has_weapon: But you block it just in time, the sound of your weapons clahsing resounding off the buldings lining teh street.|But you dodge out of the way just barely.}
+            At this point, you were starting to get familiar with their movements, but even so, they were far more skilled than you.
+                + + [Continue]
+                You try to block or dodge each of the slashes and stabs of your sword, but it gets to a point, as is always does, where you just can't keep up.
+                 They land that last final blow, burrying their sword deep into your gut.
+                 You clutch at the weapon, gasping in pain, and look at them once more. Still all you can make out are those eyes and that hint of black hair under their hood. You reach out with a trembling hand to try and remove their hood, but they back away, pulling their sword out with them.
+                 They leave you to collapse on the side of teh road, their mission having been complete.
+                 If you hoped to stand a chance, you would need a much more skilled assassin than yourself to help you out. 
+                 Lying there, on the ground, you wait as your vision slowly fades to black.
+                 Back into the cycle once more.
+                 ~previous_death = "assassin"
+                    + + + [Wake up.]
+                        -> wakeUp
+        }
+    
+    = duelFailure
+    {duelFailure == 1:
+    This time, you actually had some help. {char1} walks next to you, {char1bird} now perched on his shoulder.
+    "So uh, where's this assassin that you're saying is after you?" he asks.
+    You shush him, glancing all around. You knew they were following you, why were they so hard to spot.
+    But finally, you find them, leaning against a nearby building.
+    "Over there," you whisper to {char1}.
+    "Where?" he asks, not even bothering to quiet his voice.
+    You grimace. Maybe he wasn't the best choice to help you out here. {TalkToChar2 >= 1: Maybe you should've tried talking to {char2} again. At least she seemed level headed. {KilledByChar2 >= 1: Then again, she didn't seem to like you all that much...}}
+    "Oh, do you mean that guy?" he says, pointing in the direction of the assassin.
+    Oh, well then. there goes any subtlety.
+    When the assassin spots the two of you, having been found, they start walking in the opposite direction.
+    Before you can stop him, {char1} starts running after him, shouting, {char1bird} squawking along with him.
+    "Wait! Wait don't be stupid!" you shout trying to pull him back, but he keeps storming off.
+    You slap your forehead. Great.
+        + [Continue]
+        {char1} is already out of sight, but you keep running in the direction he went, following after that assassin. But when you turn a corner, what you see is the assassin, standing there, swatting away {char1bird} as she flaps around their head trying to peck at them. 
+        But, lying just below that was {char1} on the ground, clutching at his bleeding abdomen with his broadsword having fallen onto the ground next to him. Looking back at the assassin, you see them, their sword drawn, it soaked in blood.
+        You stand there, shocked. Even {char1}. They even took out {char1} with no problem.
+        {char1} just lies thre groaning in pain, trying desperatly to stand back up.
+        You rush to his side, letting him lean on you.
+        He looks over at you, "Dude, you didn't warn me how strong this guy was." He laughs, coughing up blood, before collasping motionless in your arms.
+        You're too shocked to move.
+            + + [Continue]
+            And you're too shocked to react when the assassin finally tuns their attention back to you and deals that final blow once more.
+            You lie on the ground, right next to {char1}, who was already gone.
+            Your vision fades to black.
+            ~killed_by_assassin += 1 
+            ~previous_death = "killed_with_char1"
+                + + + [Wake up.]
+                -> wakeUp
+    - else:
+    // you make sure to tell him NOT to chase after them, yall still die though RIP
+    With {char1} in tow, {char1bird} now perched on his shoulder, you decide to try and draw out the assassin. You remember the last time you tried to deal with the assassin with {char1}'s help, and {char1} had simply gotten himself killed, so this time, you tried to avoid that result. {TalkToChar2 >= 1: Maybe you should've tried talking to {char2} again and getting her help as well to give you and {char1} a better chance against this assassin. {KilledByChar2 >= 1: Then again, she didn't seem to like you all that much...}}
+    You grab {char1}'s arm and start dragging him to that empty street where the assassin had gotten you the first time.
+    "Hey, {protag}, where are we goin? I though we were gunna look for that assassin?"
+    "We're going to get them to come to us," you reply with a sigh, still dragging him along.
+    "Oh! Yeah that sounds like a smart idea!"
+    Sure it sounded like a smart idea{duelFailure > 2:, but the last time this happened, you still ended up dead. You wondered if it would be any different at all this time.|, but knowing how it went the last time, you did have some doubts.}
+        + [Continue]
+        The two of you arrive at the empty street. {char1} looks around, "Soooo, what are we doing over here, there's nothing around." {char1bird} croaks in agreement.
+        "They'll be here. Stay on guard."
+        "Alllllllright."
+        You both stand there for a while. You look around, waiting. Usually, the assassin would have shown themselves by now. {duelFailure == 2: What was holding them? Were they actually worried about facing off against both of you?}
+        But, just then, {char1} yells, "Look out!", pushing you out of the way. You tumble onto the ground. {duelFailure > 2: He still had better reflexes then you did, even after you'd seen how this goes already.}
+        Looking back up, you see the assassin and {char1} locking swords. {char1bird} flies around, cawing and trying to peck at the assassin as well. They exchange a few blows, and {char1} somehow manages to keep up, though it was clear he was at a disadvantage. Could he deal with this own his own? {not has_weapon: But you couldn't really do anything without your dagger could you.}
+            + + (HelpChar1)  {has_weapon} [Step in to help {char1}.]
+                {HelpChar1 > 1: Even knowing how it would end, you couldn't stand back.} You climb back up onto your feet, and pull out your dagger. While the assassin is busy fending off {char1} you might get the chance to strike. 
+                But, as you do, you notice that {char1} is getting overpowered. This next blow was going to land and he wouldn't be fast enough to dodge it. Without thinking, you move in between them, you dagger poised to block the attack.
+                But, just like {char1} you weren't fast enough either, and the assassin's blade stabs through you.
+                You collapse onto the ground, but at least this time, {char1} hadn't gotten hurt.
+                With you dealt with, the assassin doesn't even bother fighting {char1}, they simply dissaper within seconds. 
+                "{protag}!"
+                {char1} runs over to you, letting you lean on him as you bleed out.
+                "Hey dude, hang on! You'll be okay! Just hang in there!"
+                But you wouldn't be, you knew that.
+                Your vision fades to black once more.
+                ~killed_by_assassin += 1
+                ~previous_death = "assassin"
+                    + + + [Wake up.]
+                    -> wakeUp
+            + + (LetChar1HandleIt)[Let {char1} deal with it.]
+            {LetChar1HandleIt > 1: You knew that he wouldn't win, but what else were you supposed to do? Its not like you stood a chance against the assassin either.}
+            You stay there, on the ground, as you watch the two of them fight.
+            Within moments, {char1} is overpowered, and the assasssin stabs him through the middle.
+            As {char1} collapses, he looks over to you still frozen on the ground.
+            "I'm sorry I.. I couldn't help you." he manages to choke out.
+            The assassin turns their attention over to you now, and you've no choice but to stand there, helplessly, as they approach you, their sword already stained with {char1}'s blood.
+            You shut your eyes, tightly, as they strike you down once more.
+            You feel pain in your chest, an all too familiar feeling at this point, and then slowly that pain fades.
+            ~killed_by_assassin += 1
+            ~previous_death = "killed_with_char1"
+                + + + [Wake up.]
+                -> wakeUp
+    }
+    
+    
     = tavern
-    -> END
+    {tavern == 1: You head into the tavern, hoping to look for someone who wouldn't mind helping you out of this situtaion. It was the very same one you had been in the previous night - or, really more like the last {wakeUp} nights, but who was counting really. Regardless, you'd found yourself in this place many times before, which is probably not a good thing, since you've been stuck trying to make back all of that money you had spent for a while now. For a moment you wonder if whatever reason that assassin was after you was tied to this place in some way. But you quickly shurg off that speculation. Really, what could have happened in just one night that would lead someone to try and kill you. Assassin's were pretty spiteful, you second guessed yourself, but still.}
+    Inside the tavern, it isn't all too busy at this time of day. There were a few groups of people sitting at tables socializing, probably talking about all the cool new ways they found to dispatch monsters. Some where playing card games or gambling. There was one person in the back passed out drunk, probably still there from the previous night, though it wasn't like you remembered.
+    {not char2_in_party:
+    Out of the people here, you recognized a few of them, but not really anyone who you were aquainted with. Well besides one.
+    {char1_in_party: 
+    "Oh hey! Its {char2}! We should go talk to her." {char1} comments excitedly, waving at someone sitting at a table. {char1bird} caws happily as well.
+    You glance over to where {char1} is looking.
+    }
+    At one of the tables you see {char2} sitting alone, sharpening a knife, with a large mug next to her. She seemed to be pretty absorbed in what she was doing so she doesn't even look up when you come in. {char1_in_party:Though she DOES notice {char1}, who of course is pretty hard to miss, but when she does see him she gives him a small wave and something that almost resembles a smile. Really? Why did he get that treatment?} 
+    {tavern == 1: {char2} was also someone you had worked with in the past, though, it was more like you just happened to be around when she was going out on a job with {char1}. You'd talked to her a few times in the past but she didn't really talk much. Or at least, she didn't talk to YOU much.} You could always try asking her for help.
+    There wasn't really anyone else in the room you had ever really talked too, the Assassin's Guild was a pretty big organization after all, so you supposed that {char2} was your only real option. Then again, you wern't all too confident that she'd be willing to help you.
+    }
+    - (top)
+    + (TalkToChar2) {not char2_in_party} [Talk to {char2}.]
+    {not char2_rejected:
+    You decide to try talking to {char2}. When you approach the table, she looks up from sharpening her knife, {char1_in_party: giving {char1} a nod of aknowledgement, but completely glancing over you|merely giving you a glance} before returning her gaze back to the task at hand.
+    Well she didn't yell at you to leave, so you sit down at the table across from her. {char1_in_party: {char1} sits pulls up a chair next to you and sits as well, leaning an arm on the back of your chair. {char1bird} flaps over and lands on the table next to {char2}, who scratches her feathers.}
+    {char2} sets her knife down on the table, taking a sip from the mug next to her. {char1_in_party: "So, what do the two of you need from me?" she says, her tone uninterested.|"What to you want?" she asks curtly, looking over at you with a cold expression.}
+    {char1_in_party: You let {char1} speak for you.<br><br>"Well you see, ol' {protagNickname} here has been having a bit of an issue with another guild member that we were hoping you could help us out with," he says.|"Uh, well, I've kinda been having this issue with another guild member that I, um, was hoping you might be able to help me with," you manage to say.}
+    {char1_in_party: "What issue would that be?" she asks, still petting {char1bird}. |She replies, "And? Why should I care?"}
+    {char1_in_party: You explain the situation to her, about the assassin that's been after you, and she nods, half paying attention. | You laugh nervously, rubbing the back of your head, before you explain the situation to her, about the assassin that's after you. At some point during your explaination, she picks up her knife and starts sharpening it once more. You weren't sure if she was actually paying attention.}
+    {char1_in_party: "I see."<br><br>"Awesome! Will you help us out then?" {char1} asks.<br><br>"I will, however-," she says, truning her attention to you, "I'm going to need {protag} to answer a few questions for me. We'll have a little game. And, {char1}?"<br><br>"What's up?" he asks.<br><br>"Don't help them, I want them to answer the questions on their own."|"Well uh, do you think maybe you could help me out?" you ask.<br><br>She finally turns her attention to you, "I'll consider it."<br><br>"Great-"<br><br>"However, only if you're able to answer a few questions for me. We'll make it into a little game."}
+    You feel a sense of dread come over you, it just couldn't be easy could it?
+        + + [Continue]
+        ->Question1
+    - else:
+    You walk over to {char2} to try and speak with her again, but she shooes you away.
+    "I already told you that I'm not going to bother helping you," she says with a glare.
+    {char1_in_party: {char1} pouts, "But {char2}, are you sure? We really want your help..."<br><br>The look on her face is almost one of regret before she quickly composes herself, and says with a small cough, "I, uh, I already told you, I'm not going to help out someone as helpless as {protag} who can't even answer a few simple questions."<br><br>That was so uneccessary.}
+    You walk away dejected. {char1_in_party: {char1} and {char1bird} follow you with their heads held low.}
+    -> top
+    }
+    + [Head out.]
+    -> townCenterOptions
+    
+    = Question1
+    "First question then," {char2} starts. "How many members of the Assassin's Guild are there?"
+        {TalkToChar2 == 1: Wait was she seriously just quizzing you right now?}
+        {char1_in_party: {char1} opens his mouth to try and answer the question, but {char2} looks at him with a glare and he shuts his mouth.}
+        {YourRank >= 1: You remember looking at the Ranking Board in HQ in one of these time loops. When you did, you were ranked at 839th place, with just around like 160 people below you, so there must be about like a thousand total members of the guild.}
+            + (CorrectAnswer1) {YourRank >= 1} [Just about a thousand.]
+            ~questions_right += 1
+            "A thousand," you reply confidently{CorrectAnswer1 > 1:, "well 1,004 to be more precise."|.}
+            {CorrectAnswer1 > 1:{char2} looks at you, slightly suprised, "Exactly right." |{char2} looks over at you, squinting her eyes. "It's actually 1,004 but I'll give it to you."}
+            You let out a sigh of relief.
+            {char1_in_party: {char1} pats you on the shoulder. "Nice work dude!{CorrectAnswer1 > 1: You even got it exactly!}"}
+            -> Question2
+            + [A couple hundered.]
+            You laugh sheepishly, and answer, "A couple hundred?"
+            She looks at you pointedly, "Seriously?"
+            "Aha, I guess not then."
+            {char1_in_party: {char1} pats you on the shoulder. "You'll get the next one for sure!" {char1bird} nods in agreement from across the table. At least someone was on your side.}
+            {not YourRank: You might want to check the ranking board over at HQ to confirm the right number.}
+            -> Question2
+            + [A couple thousand.]
+            You laugh sheepishly, and answer, "A couple thousand?"
+            She looks at you pointedly, "Seriously?"
+            "Aha, I guess not then."
+            {char1_in_party: {char1} pats you on the shoulder. "You'll get the next one for sure!" {char1bird} nods in agreement from across the table. At least someone was on your side.}
+            {not YourRank: You might want to check the ranking board over at HQ to confirm the right number.}
+            -> Question2
+            + [Like 50.]
+            You laugh sheepishly, and answer, "Like 50?"
+            She looks at you pointedly, "You're joking right?"
+            "Aha, I guess not then."
+            {char1_in_party: {char1} pats you on the shoulder. "You'll get the next one for sure!" {char1bird} nods in agreement from across the table. At least someone was on your side.}
+            {not YourRank: You might want to check the ranking board over at HQ to confirm the right number.}
+            -> Question2
+            
+    = Question2
+    "Onto the next question," she continues. "What weapon does {char1} most often use in combat?"
+    {char1_in_party: "Oh, oh, I know this one!" {char1} says excitedly.}
+    {duelFailure or CorrectAnswer2: You remember that {char1} typically uses a broadsword to fight. {duelFailure: You grimace remembering the last time you'd seen him use it. Though hopefully you might convince {char2} to help you and that wouldn't happen again.}}
+        + [A battleaxe.]
+        "A battleaxe," you answer.
+        {char2} shakes her head. "No its not. Aren't you two friends?"
+        "Uh, well, yeah. Guess I forgot."
+        {char1_in_party: "No, its okay dude. Its not like I remember was kind of weapon you use," {char1} says laughing heartily.<br><br>Of course he wouldn't remember, though you were one to talk.}
+        -> Question3
+        + (CorrectAnswer2) [A broadsword.]
+        ~questions_right += 1
+        "He uses a broadsword, right?"
+        {char2} gives you a small nod of approval, "That's right."
+        {char1_in_party: "Aw {protagNickname}, you actually remembered?" {char1} says with a look of appreciation on his face. <br><br> You look away, a bit embarrassed, "Well, yeah, of course!"}
+        -> Question3
+        + [His fists.]
+        "Trick question, he uses his fists, not any weapon," you answer.
+        {char2} shakes her head. "What? No. Aren't you two friends?"
+        "Uh, well, yeah. Guess I forgot."
+        {char1_in_party: "No, its okay dude. Its not like I remember was kind of weapon you use," {char1} says laughing heartily.<br><br>Of course he wouldn't remember, though you were one to talk.}
+        -> Question3
+    
+    = Question3
+    "Next question," {char2} continues. "What's my ranking in the guild?"
+    ~checking_char2_ranking = true
+    {not Char2Rank: You sit there, staring. You actually had no clue. You'd have to go check the ranking board sometime when you had the chance. For now though, you'd have to take a guess.|Luckily, you'd checked the board and now knew that she was ranked 8th.}
+        + [Guess high in the rankings.]
+        You decide to guess high in the rankings, though you aren't exactly sure where, so you just try rank 50.
+        She looks at you pointedly and says, her voice low, "You really think I'm that low in the rankings?"
+        What? Was that not a high rank to be at???
+        {char1_in_party: {char1bird} shakes her feathery head at you. {char1} looks over at you, suprised, "Really dude? Don't you know how crazy strong our {char2} here is?"<br><br>When {char2} hears him say "our", it almost looks like she blushes a bit before returning to her usual steely expression.<br><br>You really weren't sure what you said wrong.}
+        "Whatever, next question," she says, sounding a bit irritated.
+        -> FinalQuestion
+        + [Guess in the middle.]
+        "Um, what about like, rank 400?"
+        {char2} remains silent, her expression dark. Slowly, she sarts reaching for the knife she left on the table.
+        {char1_in_party:
+        {char1} quickly leaps up in his chair, reaching over the table to cover her hands. "Woah woah woah, just hang on {char2}, lets not get too hasty! {protagNickname} doesn't always think before he speaks!"
+        She looks up at you, fury burning in her eyes. You start to scoot backwards in your chair.
+        But luckily after a few moments she sits back down in her chair and composes herself.
+        "Thats fine, we all make mistakes sometimes," she says putting on a fake smile.
+        You laugh nervously. She {not KilledByChar2: probably} would have killed you if {char1} weren't here.
+        -> FinalQuestion
+        - else:
+        -> KilledByChar2
+        }
+        + [Guess lower in the rankings.]
+        "Um, what about like, rank 700 or so?"
+        {char2} remains silent, her expression dark. Slowly, she sarts reaching for the knife she left on the table, her fingers twitching.
+        {char1_in_party:
+        {char1} leaps up in his chair, shouting "{char2} wait!" {char1bird} caws fearfully, flapping her wings. 
+        He tries to lean over the table to stop her, but he wasn't quite fast enough.
+        -> KilledByChar2
+        - else:
+        -> KilledByChar2
+        }
+        + (CorrectAnswer3) {Char2Rank} ["You're ranked 8th."] 
+        ~questions_right += 1
+        You lean back in your chair, smiling, "You're ranked 8th."
+        She looks at you impressed, crossing her arms proudly. "That's right."
+        But all of the sudden, her face is inches from yours, her knife pointed at your neck. Your eyes widen, you hadn't even seen her move. "And don't you ever forget that," she says quietly before leaning back in her chair.
+        {char1_in_party: {char1} laughs, "Isn't she just the coolest." <br><br> Still shaking a bit you reply in a strangles voice, "Mhm."}
+        -> FinalQuestion
+    
+    = FinalQuestion
+    "Last question. What's my favorite color?"
+    {FinalQuestion == 1: ...Wait, what? That's the question she wanted to ask you?"}
+    {char1_in_party: "Oh, I actually don't know this one," {char1} says a bit disapointed.}
+    {knowledge ? color: Luckily, you already knew that her favorite color was green. {not CorrectAnswer4: Thank's to {char1} of course.}}
+        + [Blue]
+        "Is it blue?"
+        {char2} gives you a simple, "No."
+        {char1_in_party: 
+        "Can I ask you what your favorite color is?" {char1} asks gently. He sounded genuinely curious. <br><br> She looks over at him a bit suprised, and answers quietly, "Ah, its green actually."<br><br>"That's so awesome! That's my favorite color too!"<br><br>"Oh, is it?" she says turning away a bit. You swear she was blushing. Wow these two really were something else.
+        ~knowledge += color
+        - else:
+        "Well what is it then?" you ask.
+        She glares at you, "Like I'd tell you."
+        Well okay then.
+        }
+        -> QuizResults
+        + [Red]
+        "Is it red?"
+        {char2} gives you a simple, "No."
+        {char1_in_party: 
+        "Can I ask you what your favorite color is?" {char1} asks gently. He sounded genuinely curious. <br><br> She looks over at him a bit suprised, and answers quietly, "Ah, its green actually."<br><br>"That's so awesome! That's my favorite color too!"<br><br>"Oh, is it?" she says turning away a bit. You swear she was blushing. Wow these two really were something else.
+        ~knowledge += color
+        - else:
+        "Well what is it then?" you ask.
+        She glares at you, "Like I'd tell you."
+        Well okay then.
+        }
+        -> QuizResults
+        + (CorrectAnswer4) [Green]
+        ~questions_right += 1
+        ~knowledge += color
+        "Its green, right?"
+        {char2} gives you a simple, "Yes, it is."
+        {char1_in_party: "That's so awesome! That's my favorite color too!" {char1} says excitedly.<br><br>"Oh, is it really?" {char2} says turning away a bit. You swear she was blushing. Wow, these two really were something else.}
+        -> QuizResults
+        + [Silver]
+        "Is it silver?"
+        {char2} gives you a simple, "No."
+        {char1_in_party: 
+        "Can I ask you what your favorite color is?" {char1} asks gently. He sounded genuinely curious. <br><br> She looks over at him a bit suprised, and answers quietly, "Ah, its green actually."<br><br>"That's so awesome! That's my favorite color too!"<br><br>"Oh, is it really?" she says turning away a bit. You swear she was blushing. Wow these two really were something else.
+        ~knowledge += color
+        - else:
+        "Well what is it then?" you ask.
+        She glares at you, "Like I'd tell you."
+        Well okay then.
+        }
+        -> QuizResults
+        + [Black]
+        "Is it black"
+        {char2} gives you a simple, "No."
+        {char1_in_party: 
+        "Can I ask you what your favorite color is?" {char1} asks gently. He sounded genuinely curious. <br><br> She looks over at him a bit suprised, and answers quietly, "Ah, its green actually."<br><br>"That's so awesome! That's my favorite color too!"<br><br>"Oh, is it?" she says turning away a bit. You swear she was blushing. Wow these two really were something else.
+        ~knowledge += color
+        - else:
+        "Well what is it then?" you ask.
+        She glares at you, "Like I'd tell you."
+        Well okay then.
+        }
+        -> QuizResults
+    
+    = QuizResults
+    {questions_right >= 4:
+    "Well, it looks like you got all of my questions correct," {char2} says.
+    "Does that mean you'll help me out then?" you ask.
+    {char1_in_party:
+    ~char2_in_party = true
+    "Yeah, sure."
+    {char1} beams, picking you up out of your chair and hugging you, "Heck yeah! Let's go team! We're off on an mission."
+    {char2} chuckles quietly to herself.
+    The three of you stand up, ready to leave.
+    - else:
+    ~char2_rejected = true
+    "Eh, don't really feel like it."
+    She made you do this quiz, only for her to completely reject you even though you got all of the questions right?
+    "Are you serious?" you shout, standing up in your chair.
+    She looks over at you glowering. "Yes, and I'm not going to repeat myself."
+    You stand up in your chair, ready to leave. Well that wasn't sucessful. Maybe you ought to get {char1} to help you instead. Though maybe, if you had him here with you she wouldn't have rejected you.
+    }
+    -> top
+    - else:
+    ~char2_rejected = true
+    "Well you missed a couple of questions, so I can't help you," {char2} says.
+    Seriously?
+    {char1_in_party: "Wait really {char2}? You can't help us at all?" {char1} says sadly.<br><br>She looks down, closing her eyes, "Sorry, I just can't help someone who can't even answer a few simple questions correctly."<br><br>You sigh, "Come on, {char1} lets just go," you say. The two of you stand up, ready to leave. If you wanted her help, you were going to have to answer her questions correctly.|"You won't reconsider?" you ask. <br><br>"No, now leave me alone."<br><br>Well alright then, if you wanted her help, you were going to have to answer all of her questions correctly. You stand up, ready to leave.}
+    -> top
+    }
+    
+    = KilledByChar2
+    ~previous_death = "char2"
+    Before you knew it, you were lying on the tavern floor, unable to feel anything at all and unable to move.
+    You lie there, staring at the floor, as your vision starts to fade.
+    {char1_in_party: You here the faint sounds of {char1} shouting at {char2}, before you fall into darkness completely.}
+    + [Wake up.]
+    -> wakeUp
+    
+    = talkToChar1
+    {not bird_found:
+    {not looking_for_bird:
+    {talkToChar1 == 1: It isn't hard for you to find {char1} wandering around the town. One of course, being because he's the tallest person around, and also that his voice as he yelled out {char1bird}'s name could be heared from just about anywhere.}
+    You walk up to {char1}, "Hey {char1}!"
+    He turns towards you, beaming, "Oh hey {protag}! What's up?"
+    "Do you think you could help me out with something?"
+    "Oh uh sure dude! But I'm a bit busy right now, so maybe afterwards?"
+    Oh that's right, he was looking for {char1bird},{knowledge ? bird: his bird| whoever that was}.
+    "You're looking for {char1bird} right?"
+    "I am actually! How did you know that?"
+    Probably because you've been yelling it all morning, you think to yourself.
+    "Lucky guess, anyways, do you need help looking?"
+    He smiles at you again, he really never stopped smiling did he?
+    "That would be super awesome! You remember what she looks like right?"
+        + {knowledge ? bird} "Sure do."
+            "Awesome! Well, lets split up and find her then! See you later dude!"
+            He runs off.
+            Well, looks like you had to go find that bird.
+            ~looking_for_bird = true
+            -> townCenterOptions
+        + "Could you remind me actually?"
+            "Oh for sure! She's pretty small, and she's got lots of black feathers, and a real sharp beak!"
+            {not (knowledge ? bird): 
+            Wait... was {char1bird} a bird the whole time? 
+            ~knowledge += birdLocation
+            }
+            "Got it," you respond.
+            "Awesome! Well, lets split up and find her then! See you later dude!"
+            He runs off.
+            Well, looks like you had to go find that bird.
+            ~looking_for_bird = true
+            -> townCenterOptions
+    - else:
+    "Oh, hey {protagNickname}! I haven't found {char1bird} yet. Have any luck on your end?"
+    "Ah no, not yet!"
+    "Ah that's alright! I'll keep looking then. I can help you out afterwards!"
+    He scampers off to continue looking.
+    If you wanted to get his help, you were going to have to help find his bird first.
+    -> townCenterOptions
+    }
+    - else:
+    {looking_for_bird:
+    "Hey {char1}! I found {char1bird}!"
+    He turns around beaming and {char1bird} squawks, flapping over to him cheerfully. She lands, perched on his shoulder, and he scratches her feathers.
+    "Thanks so much {protagNickname}! You're the best!"
+    You scratch the back of your head, embarassed.
+    He continues, "So what do you need help with?"
+    - else:
+    "Hey {char1}! I found {char1bird}!"
+    She squawks and flaps over to him. He turns around, suprised, and then beams when he sees her.
+    "Hey thanks {protagNickname}! How did you know she was missing?"
+    "Ah just a lucky guess. I was hoping you'd help me with something."
+    "Sure thing. What do you need?"
+    }
+    You explain the situation, leaving out the part where you've been stuck in a loop of the same day like {wakeUp} different times.
+    "I think there's an assassin after me."
+    {char1}'s expression changes almost instantly, becoming serious. He closes his eyes pondering.
+    He nods, "Yeah that seems like a problem." {char1bird} nods too.
+    "Right, so do you think you could help me out? its not really something I can deal with on my own..."
+    He claps you on the back, "Of course dude. Whoever this assassin guy is, we'll deal with it together."
+    You let out a sigh of relief. Well at least you got someone to help you out. Though it was weirdly easy to convince him.
+    ~char1_in_party = true 
+        + [Continue]
+        -> townCenterOptions
+    }
     
     =searchForBird
-    -> END
+    // simple search for bird, count up actions, if actions too many, assassin do a sneaky and u die
+    Time to start searching for {char1}'s bird. {searchForBird > 1 and not (knowledge ? birdLocation): You tried searching for {char1bird} before, but you still didn't know where she was. You ought to try checking places you hand't before in previous loops. {tooSlow >= 1: And you ought to be quicker about it before that assassin caught up to you again.}}{searchForBird > 1 and knowledge ? birdLocation: You already knew where to look for {char1bird}. She was in the flower shop by the boquets. {tooSlow >= 1: All you needed to do was get to her quickly, so that the assassin couldn't sneak up on you.}}
+    - (birdSearch)
+    {actions_this_loop <= 10:
     
-    =ending
+    + (Inn) {not bird_found} [Check around the inn.]
+    You decide to check the inn to see if {char1bird} is around.
+    + + (InsideInn) [Check inside.]
+    You are currently inside of the inn looking for {char1bird}. The innkeeper glares at you the whole time you look, but you ignore them.
+    + + + [Check on the first floor.]
+    ~actions_this_loop += 1
+    You look around the first floor, checking for any sign of {char1bird} but you don't find her anywhere.
+    -> InsideInn
+    + + + [Check on the second floor.]
+    ~actions_this_loop += 1
+    You look around the second floor of the inn, checking inside any room that isn't occupied, but you don't find {char1bird}.
+    -> InsideInn
+    + + + [Go back outside.]
+    -> Inn
+    ++ [Check around the back.]
+    ~actions_this_loop += 1
+    You decide to look behind the inn, searching the yard for any sign of the bird, but you do not find her. 
+    -> Inn
+    + + [Look somewhere else.]
+    -> birdSearch
+    
+    + (Tavern) {not bird_found} [Check around the tavern.]
+    ~actions_this_loop += 1
+    You go towards the tavern, checking to see if {char1bird} might be around. {TalkToChar2 >= 1: When {char2} sees you from the table that she sits at, she gives you a strange look.}
+    + + [Look under the tables.]
+    You crouch down and check to see if she might have hidden under any of the tables, but to no avail.
+    -> Tavern
+    + + [Look up in the rafters.]
+    ~actions_this_loop += 1
+    You look upwards, searching between the rafters of the building on the off chance she might be up there. You try to jump to get a better look, but you don't see her anywhere.
+    -> Tavern
+    + + [Look somewhere else.]
+    -> birdSearch
+    
+    + (weaponStall) {not bird_found} [Check by the weapon's stalls.]
+    You decide to check near the weapon stalls for any sign of {char1bird}.
+    + + [Check by the sword stand.]
+    ~actions_this_loop += 1
+    You look all around the stand selling swords, the people around giving you strange looks as you do, but you don't see her.
+    -> weaponStall
+    + + [Check by the spear stand.]
+    ~actions_this_loop += 1
+    You look near the stall selling spears, glancing between the rows of weapons, but you do not find her.
+    -> weaponStall
+    + + [Check by the dagger and knives stand.]
+     ~actions_this_loop += 1
+    You look around the stand selling all manner of knives and daggers. The owner of the stall recognizes you and tells you about all the new daggers that he has is stock, but you keep looking for the bird without acknolwedging him. You find no sign of her.
+    -> weaponStall
+    + + [Look somewhere else.]
+    -> birdSearch
+    
+    + (Armory) {not bird_found} [Check by the armory.]
+    You go towards the armory to loop for {char1bird}.
+    + + [Check over by the sets of metal armor in the back.]
+    ~actions_this_loop += 1
+    You head towards the back near the rows and rows of armor sets. You look behind each of them, but see no sign of her anywhere.
+    -> Armory
+    + + [Check over by the cloaks and other attire.]
+    ~actions_this_loop += 1
+    You check the rows of cloaks and other attire, some of which you actually do own, but you don't find the bird anywhere among the folds of fabric.
+    -> Armory
+    + + [Look somewhere else.]
+    -> birdSearch
+    
+    + (Bakery) {not bird_found} [Check by the bakery.]
+    You decide to go over to the bakery to check for {char1bird}.
+    + + [Check by the cakes.]
+    ~actions_this_loop += 1
+    You look by the section of the store with all of the different cakes. Your mouth waters as you walk past. But even after looking, you don't find the bird.
+    -> Bakery
+    + + [Check by the stacks of bread.]
+    ~actions_this_loop += 1
+    You check over by all of the different shelves of bread. Seems like a likely place for a bird to end up getting lost, but you don't actually end up finding her.
+    -> Bakery
+    + + [Look somewhere else.]
+    -> birdSearch
+    
+    + (flowerShop) {not bird_found} [Check inside the flower shop.]
+    You decide to check inside of the flower shop for any sign of the bird.
+    + + [Check over by the potted plants.]
+    ~actions_this_loop += 1
+    You look over by the potted plants inside of the store for any sign of {char1bird}, but you don't see her amoung the greenery.
+    -> flowerShop
+    + + [Check over by the flower bouqets.]
+    ~actions_this_loop += 1
+    ~knowledge += birdLocation
+    You decide to look over by all of the flower boquets. As you look through the arrays of colorful petals, you hear a caw. 
+    Your eyes light up when you spot a bundle of black feathers. {char1bird} looks at you inquisitively with small beady eyes. You hold out your hand for her to hop on and she does with a delighted squawk. 
+    Now you could return her to {char1}.
+    ~bird_found = true 
+    -> birdSearch
+    + + [Look somewhere else.]
+    -> birdSearch
+    
+    + (Fountain) {not bird_found} [Check by the fountaion.]
+    You decide to check around the large water fountain at the center of town for any sign of {char1bird}. Surely this would be the most likely place to find a bird hanging around.
+    + + [Check around the outside.]
+    ~actions_this_loop += 1
+    You look all around the surrounding of the fountain, even undermeath the benches or atop the center of the fountain, but you don't end up finding the bird.
+    -> Fountain
+    + + [Check in the water.]
+    ~actions_this_loop += 1
+    You look around the inside of the water fountain, to see if she might be bathing in the water, but you can't see her here either.
+    -> Fountain
+    + + [Look somewhere else.]
+    -> birdSearch
+    
+    + [Stop looking.]
+    {bird_found: Now that you'd found {char1bird}, you ought to return back to {char1}.| You decided against continuing to look for {char1bird}.}
+    -> townCenterOptions
+    - else:
+    ~previous_death = "assassin"
+    ~killed_by_assassin += 1
+    {bird_found:
+    With {char1bird} following close behind you, just as you are about to go find {char1}, you feel a familiar sort of presence.
+    {char1bird} lets out a shrill caw of alarm, but before you have time to react, you are stabbed through the middle with a blade. You had taken too long to find the bird, and they had caught up to you unawares once again.
+    They really were super hard to avoid weren't they.
+    As you fall forwards, the sounds of {char1bird} cawing in panic fading away as your vision fades to black.
+    - else:
+    Just as you're about to search somewhere else to find {char1bird}, you feel a familiar sort of presence. At this point, you could get a sense of when they were about to sneak up on you.
+    But even still, you had no time to react when the assassin stabbed you through the middle. You really were starting to get used to that feeling.
+    You fall forwards, pain spreading from your abdomen, your vision fading quickly to black as you watch the assasin walk away from your fallen body.
+    
+    }
+    + (tooSlow) [Wake up.]
+    -> wakeUp
+    }
+    
+    
+    = ending
+    // ENDING SEQUENCE - u win - plot revealed (plot is stupid but thats funny so it okay)
+    THIS IS THE END
     ->END
-
--> END
