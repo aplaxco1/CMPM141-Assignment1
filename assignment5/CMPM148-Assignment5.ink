@@ -76,7 +76,7 @@ This time. This time you knew what they looked like. Not completely, but it was 
     -> HeadOut
     + {wakeUp > 1} [Head out for the day.]
     -> HeadOut
-    - (introMonolouge)
+    = introMonolouge
     With a bit of a struggle, you use all of the strength in your arms to get yourself back up on two feet. Your head is still spinning but you manage to stand upright this time. 
     You laugh quietly to yourself, but wince at the sharp pain in your head. Some assassin you were.
     Yup, believe it or not, you were actually an assassin working at the local Assassin's Guild in this town. Actually, the entire town WAS the whole guild more or less. You can't imagine there were actually any sane people that lived here given the types of people that roamed these streets. It was called an Assassin's Guild, but, really, it consisted of just about anyone and everyone who made a living by killing, human or otherwise: bounty hunters, executioners, hit-men, you name it.
@@ -200,7 +200,7 @@ This time. This time you knew what they looked like. Not completely, but it was 
         {wakeUp == 1: Knowing what this town was like, you weren't going to just accept help from anyone. You haul yourself back up to your feet.}{wakeUp == 2 and RefuseOffer > 1: Look, {char1} may be nice enough, but you still didn't entirely trust him. Besides, you'd rather just get up on your own, you didn't need any help. You haul yourself back up on your feet.|{wakeUp == 2 and RefuseOffer == 1: You remember how he hauled you back up in your dream. He wasn't exactly the most gentle person, wether he intended it or not. Even if it was just a dream, you'd rather just get up on your own. You haul yourself back up on your feet, brushing yourself off.}}
         -> char1Introduction
         
-        - (char1Introduction)
+        = char1Introduction
         {wakeUp == 1: The person you knocked you over was {char1}. He was this tall, super burly dude, who was a member of the guild just like you were. You'd worked with him a couple times before, so you were on good enough terms. At first glance, he definitely seemed pretty intimidating, but...}
         "Sorry bout that!" he says, rubbing the back of his head with an apologetic grin on his face. " I'm in a bit of a rush right now!{face_cut: Oh wait, what happened to your face? Are you okay??}"
         {wakeUp == 1: 
@@ -596,7 +596,7 @@ This time. This time you knew what they looked like. Not completely, but it was 
                 + + + [Wake up.]
                     -> wakeUp
                     
-    - (stuckInMud)
+    = stuckInMud
         + [Try to get out.]
             {stuckInMud < 5: 
             You twist and turn trying to get your leg unstuck, water sloshing all around you, but it doesnt budge.
@@ -610,7 +610,7 @@ This time. This time you knew what they looked like. Not completely, but it was 
         + + [Continue]
         -> job1Failure
     
-    - (job1Failure)
+    = job1Failure
     ~killed_by_assassin += 1
     ~previous_death = "assassin"
     ~knowledge += job1Assassin
@@ -624,7 +624,7 @@ This time. This time you knew what they looked like. Not completely, but it was 
     - else:
     {jobOneSuccess == 1 and not (knowledge ? assassinAfterYou):
     That is, until you feel a sharp pain in your chest.
-    {killed_by_assassin > 1: There was no way. NO way.}
+    {killed_by_assassin > 1: There was no way. Not again.}
     "Wha-"
     You look down to see a sword piercing through your chest, covered in blood{killed_by_assassin > 1:, a sight you'd seen before.}.
     You reach up, your hands shaking as the corners of your vision starts to fade.
@@ -656,7 +656,7 @@ This time. This time you knew what they looked like. Not completely, but it was 
     + [Wake up.]
         -> wakeUp
         
-    - (jobOneSuccess)
+    = jobOneSuccess
     ~knowledge += job1Success
     You reach for your dagger, slowly, as not to draw to much attention to yourself. When the monster's get closer, their glowing red eyes within sight, you lunge at them.
     The monsters are quick, but you are quicker. The first one doesn't react to your presence in time, and you bury a dagger in its neck, it yowling out in pain and collapsing to the floor in a heap.
@@ -829,7 +829,7 @@ This time. This time you knew what they looked like. Not completely, but it was 
                                     + + + + + + [Wake up.]
                                     -> wakeUp
                                     
-            - (job2Failure)
+            = job2Failure
             ~killed_by_assassin += 1
             ~previous_death = "assassin"
             ~knowledge += job2Assassin
@@ -875,7 +875,7 @@ This time. This time you knew what they looked like. Not completely, but it was 
                 + [Wake up.]
                 -> wakeUp
                 
-            - (jobTwoSuccess)
+            = jobTwoSuccess
             ~knowledge += job2Success
             -> job2Failure
                 
@@ -1455,5 +1455,102 @@ This time. This time you knew what they looked like. Not completely, but it was 
     
     = ending
     // ENDING SEQUENCE - u win - plot revealed (plot is stupid but thats funny so it okay)
-    THIS IS THE END
-    ->END
+    You quickly formulate a plan with {char1} and {char2}. {char1} gives you a thumbs up, though you do worry how well he'll actually follow instructions. Luckily, {char2} seems to follow perfectly well. 
+    The three of you head out to a deserted part of town, that same street where the assassin had found you before. Though really, its just you and {char1} - well and {char1bird} too - that walk out in the open, while {char2} follows in secret. As soon as she hid, you legitimately couldn't find her, or sense her presence at all. Even that assassin was still easy enough to spot once you knew what they looked like. {char2} really WAS intimidating. That's the 8th ranked assassin for you.
+    "So, when do you think that assassin will show?" {char1} asks.
+    "I honestly have no idea, I just know that they're here. They've gotta be."
+    Maybe you would finally figure out why they wanted you dead so badly. And hopefully you'd finally get to see tomorrow after these past {wakeUp} attempts.
+        + [Continue]
+        It happened quickly. You heard them draw their sword behind you, and {char1} was quick to action, blocking their attack from hitting you with his broadsword. {has_weapon: You drew your dagger too, but you didn't even need to really, {char1} seemed to have it handled for the most part.}
+        The two exchange blows, the sound of metal claging against metal. {char1} seems to be doing fairly well, definitely better than you fared, but even he wasn't fast enough for them. You started to wonder where {char2}, you still couldn't see her anywhere.
+        But then, the assassin manages to knock {char1} over with a swift strike. He lands on the ground with a grunt, {char1bird} who was flying around above letting out a shrill squawk of fear.
+                + + [Jump in to help.]
+                {has_weapon: With your dagger drawn, you leap in to defend {char1}.|Even without your dagger on hand, you leap into action, ready to defend {char1} with your bare fists if you had to.}{duelFailure: After what happened that one attempt, when it was just you and him, you couldn't bear to see it happen again.}
+                "No, {protagNickname}! Stay back, he's too strong for you!" {char1} shouts. The assassin turns to you, faster than your eyes can track and draws their sword back, ready to put an end to you.
+                    + + + [Continue.]
+                    But, just as the assassin reaches you, {char2} appears out of nowhere in an instant, her saber drawn. She stabs the assailent right through the heart.
+                    They stand their for a moment, grunting in pain, before they collapse onto the ground, their sword clattering to the ground next to them.
+                    "Idiot," {char2} seethes at you. "The whole point of me joining was so that you WOULDN'T die, but you almost got yourself killed anyway."
+                    "I was trying to save {char1}!" you shout back.
+                    She scoffs, "I wouldn't have let anything happen to him."
+                    {char1} walks over, "Well at least its all over now."
+                    Yeah, but now the assassin was dead, and you still didn't know why they had wanted you dead.
+                    {char2} walks over, using the tip of her saber to remove the assasin's hood and mask. Her eyes widden.
+                        + + + + [Continue]
+                        You shuffle over and finally look at the face of the one who's been killing you in this endless loop. The one who killed you over {killed_by_assassin} times.
+                        The three - four - of you stand over the man in a circle.
+                        "Who... is that?"
+                        "I have no idea," {char1} replies bluntly.
+                        Silence.
+                        "You guys are dumb," {char2} says, shaking her head. "This is the 10th ranked assassin, or well, he WAS. This is going to be fun to explain to management." She sighs, wiping the blood off of her saber with the side of her cloak.
+                        You stand there dumbfounded. Wait, what? Why did he want you dead?
+                        "What did you do to piss HIM off?" {char1} asks.
+                        You shrug. You really do wish you remembered anything about the night before, but your mind was blank. You'd really never seen him before.
+                        You all stand there in silence for a moment.
+                        "Well, you guys wanna go get drinks?" {char1} asks.
+                        "Sure," {char2} replies sheathing her blade.
+                            + + + + + ["I should probably lay off drinking for a while."]
+                            You probably should.
+                            "Suit yourself," {char2} says. 
+                            The three of you walk off into the sunset. {char1} and {char2} wave goodbye once you get back to town and you walk off on your own.
+                            You walk for a while, luckily not getting stabbed in the back this time.
+                            "Wait I... I still never got any money to pay the innkeeper back."
+                            -> END
+                            + + + + + ["Yeah, lets go."]
+                            Now that the assassin was gone, did it even matter anymore?
+                            The three off you walk back into town, the sun setting in the distance. You spend the night drinking again.
+                            When you awaken, still bleary eyed, you are met with the sight of the half-rotted wooden ceiling of the inn that you'd spent the night in, sunlight staring to stream in from the window. 
+                            You hear the sounds of {char1} snoring on the floor next to you, {char1bird} curled up on his chest.
+                            Your head is pounding, you barely remember anything from the night before. The days before? Within your jumbled memories, you just remember the feeling of getting stabbed, a lot.
+                            You shake your head and go back to sleep.
+                        -> END
+                + + [Trust in {char2}.]
+                Figuring you would probably end up just getting in the way, you stand back. Just before the assassin's blow lands, {char2} appears, nearly out of thin air, her saber already pulled and pressed against the assailent's neck. They freeze in their tracks, sword still raised.
+                {char2} tilts her head, "I advise you drop you sword before I end you life."
+                The assalient doesn't hesitate. They drop their sword onto the ground immediately.
+                As they do, {char1} leaps back up and pins their arms behind their back. {char2}, using the tip of her saber, removes the assassin's hood and mask. Her eyes widden for a moment, before she rolls her eyes.
+                "Wait, who is that?" you ask. You legitimalety had no idea, you'd never seen this guy before.
+                The man furrows his eyebrows, "Are you KIDDING me?" he yells at you, struggling in {char1}'s grasp.
+                You raise your eyebrows.
+                {char2} sighs, "This is the 10th ranked assassin in  the guild."
+                "Damnned straight!" he yells, before {char2} points her saber back at him and he promptly shuts back up.
+                "What did {protagNickname} do to you? Why do you want him dead?" {char1} demands. {char1bird} lands on the assailent's head and caws at him angrily, pecking at him.
+                The so called "10th ranked assassin" glares over at you, "They robbed me!"
+                "What? No I didn't! And why would you go as far to kill me for that anyways?"
+                "Yes you DID, you cheated! How do you not remember?"
+                "Cheated at WHAT?" you yell back.
+                "Poker!"
+                You freeze... wait. Was THAT what you had been doing last night?
+                + + + [Continue]
+                {char2} sighs, rolling her eyes again. "No, no {protag} didn't cheat. I get it now. You lost to them fair and square and don't want to admit it. He's always been a sore loser."
+                The assasin doesn't say anything. So that was it. You kicked his ass at poker, not even concious enough to remember it, and he tried to kill you for it. That was the big reveal? And this guy was supposed to be only two ranks lower than {char2}?
+                You sigh, "I'm so tired."
+                {char1} releases him and threatens, "If you come after {protagNickname} again, we'll end you."
+                "We?" {char2} asks.
+                "Yes WE. The three of us are pals aren't we?" {char1} says.
+                "Maybe you two are, but I'm not friends with them," {char2} replies.
+                While the two of them argue back and forth, the assassin scampers away, not even bothering with you anymore.
+                "But, but {char2}..." {char1} says, pouting. {char1bird} flaps over and gives her the saddest look a bird could muster.
+                She closes her eyes contemplating, and then flings up her hands, "Fine, fine."
+                She turns to the assassin as he flees, and he freezes in place. 
+                "If you try to hunt down {protag} again, WE will end you," she growls, giving him the most terrifying look you'd ever seen. He runs off, hopefully never to be seen again.
+                The three of you stand without speaking for a while.
+                "Well then, you guys wanna go get some drinks?" {char1} asks, breaking the silence.
+                "Yes, please," {char2} replies rubbing her temples.
+                + + + + + ["I should probably lay off drinking for a while."]
+                    You probably should.
+                    "Ah, well then lets all do something else!" {char1} compromises.
+                    "Why am I getting dragged into this," {char2} mutters under her breath.
+                    The two of you walk back into town, the sun setting in the distance. The three of you end up going shopping. Well, {char1} goes shopping. You and {char2} just tag along. After all, you never did end up making any money today.
+                    When you awaken the next day, you are met with the sight of the half-rotted wooden ceiling of the inn that you'd spent the night in, sunlight staring to stream in from the window. 
+                    You hear the sounds of {char1} snoring on the floor next to you, {char1bird} curled up on his chest. {char2} lies atop the other bed in the room across from you, sleeping soundlessly.
+                    It was finally over.
+                    -> END
+                + + + + + ["Yeah, lets go."]
+                    Now that the assassin had run off, probably scared for his life, did it even matter anymore?
+                    The three off you walk back into town, the sun setting in the distance. You spend the night drinking again. {char2} has to keep you from playing any more poker with any of the other customers at the tavern, she makes you vow to it.
+                    When you awaken, still bleary eyed, you are met with the sight of the half-rotted wooden ceiling of the inn that you'd spent the night in, sunlight staring to stream in from the window. 
+                    You hear the sounds of {char1} snoring on the floor next to you, {char1bird} curled up on his chest. {char2} lies atop the other bed in the room across from you, sleeping soundlessly.
+                    Your head is pounding, you barely remember anything from the night before. The days before? Within your jumbled memories, you just remember the feeling of getting stabbed, a lot. And then, vowing to never play poker again? Weird.
+                    You shake your head and go back to sleep.
+                    ->END
