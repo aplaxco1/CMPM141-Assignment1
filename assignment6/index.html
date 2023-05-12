@@ -1,0 +1,61 @@
+<!DOCTYPEhtml><head>
+<title> CMPM 148 - Assignment 6</title>
+
+
+<script src="jquery-1.11.2.min.js"></script>
+<script src="input_output.js"></script>
+<script src="mathUtil.js"></script>
+
+<script src="narrativeManager.js"></script>
+<script src="incremental.js"></script>
+<script src="statAnalysis.js"></script>
+
+<style>
+.selected {
+  color: red;
+  background-color: #beef
+}
+#reports {
+  overflow-y: scroll; 
+  border: 1px solid black; 
+  height: 100px; 
+  width: 50%;
+  margins:auto;
+  display: inline-block;
+}
+</style>
+
+
+</head>
+<body>
+<div id="reports" style=> </div> 
+<div class="stage" id="stage1" style="z-index: 1"> 
+
+
+<h1> <span id=era>CMPM 148 - Assignment 6</span></h1> 
+
+  <button onclick=game.swichPanels("panel1") id="showPanel1"> Manage Troops</button>
+  <button onclick=game.swichPanels("panel2") id="showPanel2"> Conquer Lands</button>
+
+  <div class="panel" id="panel1"> 
+    <table>
+    <tr> <td>
+    <table style="width:120%">
+    <tr><td>Funds</td> <td> </td> <td class="currentFunds"></td></tr>
+    <tr id="foodSupplyRow"><td> Food Supply</td> <td></td> <td class="currentFoodSupply"></td><td><button onclick=game.purchaseFood()> Purchase Food</button></td><td>Cost<td class="foodCost"></td></td></tr>
+    <tr id="troopsRow"><td> Troops</td> <td></td> <td class="currentTroops"></td><td><button onclick=game.purchaseTroops()> Purchase Troops</button></td><td>Cost<td class="troopsCost"></td></td></tr>
+    </table>
+
+
+  </div>
+
+  
+  <div class="panel"  id="panel2">
+  <h1> Panel 2</h1>
+
+  </div>
+
+
+
+</body>
+</html>
