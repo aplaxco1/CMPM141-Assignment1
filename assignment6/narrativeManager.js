@@ -12,7 +12,7 @@ const narrativeManager = class {
     triggered: false,
     test: function(data){return data.troops >= 1}, 
     unlock:function(){io.showElement("showPanel2");io.showElement("ConquestTable")},  
-    report: function(){io.appendIntoElement("You've aquired enough troops to begin your conquest.", "reports");}
+    report: function(){io.appendIntoElement("You've aquired enough troops to begin your conquest.\n\n", "reports");}
   },
   {
     triggered: false,

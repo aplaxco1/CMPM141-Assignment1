@@ -1,7 +1,57 @@
-const strengthMax = 30;
-const moraleMax = 25;
+const farmland_conquest = {
+  "origin": "#story#",
+  "story": "Your troops travel #direction#, #where# the #adj1# #location#. Once they reach the #adj2# #place#, they begin their #battle#. ",
+  "direction": ["north", "south", "east", "west", "eastward", "westward"],
+  "where": ["across", "through", "underneath", "near", "above", "apst"],
+  "adj1": ["arid", "dry", "deserted","grassy", "vast", "empty", "war-torn", "bleak", "quiet", "silent", "stormy", "ancient"],
+  "location": ["plains", "desert", "feilds", "forests", "hills", "woods", "mountains"],
+  "adj2": ["impoverished", "desecrated", "destroyed", "run-down", "broken-down", "sinking", "declining", "flourishing", "thriving", "enriched", "lively", "war-torn", "ransacked", "bustling", "scortched", "desolate"],
+  "place": ["farm village", "farming village", "farmlands"],
+  "battle": ["fight", "struggle", "conquest", "battle", "slaughter", "armed conflict", "clash", "melee", "campaign", "skirmish", "engagement"],
+}
 
-// ghosts of enemies scare away troops and prices increase
+const town_conquest = {
+  "origin": "#story#",
+  "story": "Your troops travel #direction#, #where# the #adj1# #location#. Once they reach the #adj2# #place#, they begin their #battle#. ",
+  "direction": ["north", "south", "east", "west", "eastward", "westward"],
+  "where": ["across", "through", "underneath", "near", "above", "past"],
+  "adj1": ["arid", "dry", "deserted", "grassy", "vast", "empty", "war-torn", "bleak", "quiet", "silent", "stormy", "ancient", "snowy", "rainy"],
+  "location": ["plains", "desert", "feilds", "forests", "hills", "woods", "mountains", "villages", "river", "ocean"],
+  "adj2": ["impoverished", "desecrated", "destroyed", "run-down", "declining", "flourishing", "thriving", "enriched", "lively", "war-torn", "ransacked", "bustling", "picturesque", "desolate", "bustling", "near-empty", "forgotten"],
+  "place": ["city", "town"],
+  "battle": ["fight", "struggle", "conquest", "battle", "slaughter", "armed conflict", "clash", "melee", "campaign", "skirmish", "engagement"],
+}
+
+const fortress_conquest = {
+  "origin": "#story#",
+  "story": "Your troops travel #direction#, #where# the #adj1# #location#. Once they reach the #adj2# #place#, they begin their #battle#. ",
+  "direction": ["north", "south", "east", "west", "eastward", "westward"],
+  "where": ["across", "through", "underneath", "near", "above", "past"],
+  "adj1": ["arid", "dry", "deserted","grassy", "vast", "empty", "war-torn", "empty", "bleak", "quiet", "silent", "stormy", "ancient", "war-torn", "snowy", "rainy", "depressing", "territorial"],
+  "location": ["plains", "desert", "feilds", "forests", "hillsides", "woods", "mountains", "villages", "penninsula"],
+  "adj2": ["desecrated", "run-down", "sinking", "war-torn", "desolate", "powerful", "full", "intimidating", "tall", "vast", "large", "impenetrable", "stone"],
+  "place": ["military fort", "fortress", "citadel", "bastion", "stronghold"],
+  "battle": ["fight", "struggle", "conquest", "battle", "slaughter", "armed conflict", "clash", "melee", "campaign", "skirmish", "engagement"],
+}
+
+const castle_conquest = {
+  "origin": "#story#",
+  "story": "Your troops travel #direction#, #where# the #adj1# #location#. Once they reach the #adj2# #place#, they begin their #battle#. ",
+  "direction": ["north", "south", "east", "west", "eastward", "westward"],
+  "where": ["across", "through", "underneath", "near", "above", "past"],
+  "adj1": ["decaying", "arid", "dry", "deserted","grassy", "vast", "empty", "war-torn", "bleak", "quiet", "silent", "stormy", "ancient", "eerie", "snowy", "rainy", "desolate", "empty", "destroyed"],
+  "location": ["plains", "desert", "feilds", "forests", "hills", "woods", "mountains", "ocean", "lands", "villages", "towns", "cities", "territories"],
+  "adj2": ["decaying", "impoverished", "desecrated", "destroyed", "broken-down", "sinking", "declining", "flourishing", "war-torn", "ransacked", "picturesque", "scortched", "impenetrable", "large", "intimidating", "small", "impregnable", "tyrannical", "opressive", "massive", "luxurious", "stone"],
+  "place": ["castle", "palace"],
+  "battle": ["fight", "struggle", "conquest", "battle", "slaughter", "armed conflict", "clash", "melee", "campaign", "skirmish", "engagement"],
+}
+
+const spooky_event = {
+  "origin": "#story#",
+  "story": "Throughout the #battle# your troops are tormented by the #event#. ",
+  "battle": ["fight", "struggle", "conquest", "battle", "slaughter", "armed conflict", "clash", "melee", "campaign", "skirmish", "engagement"],
+  "event": ["bloodied corpses of past fallen troops", "ghostly corpses hanging from the trees", "hollowing faces of those long perished", "howling moans of the deceased", "tembling hands of those they killed", "piles of bloodied corpses", "painful cries of those left standing", "agonized moans of the dead", "howling of perished spirits", "bloodied, armored ghosts of their perished enemies"]
+}
 
 const GameInstance = class {
   constructor() {
@@ -26,7 +76,7 @@ const GameInstance = class {
     this.troopsLost = 0;
 
     this.enemiesDefeated = 0;
-    this.enemiesSurvived = 0; // use for events? like how likely you are to lose certain lands at random intervals (calculated based on percantage of your troops?)
+    this.enemiesSurvived = 0;
     
     // battle management stuff
     this.pointsEarned = 0;
@@ -43,21 +93,21 @@ const GameInstance = class {
     this.banditsEvent = 1;
     this.territoryStolen = 1;
     this.troopsGhosts = 1;
-    this.enemyGhosts = 1; // still need to do
+    this.enemyGhosts = 1;
   }
 
   updateEvents() {
     // set values
-    this.ratsEvent = 1 - ((this.foodIncrement / 4) * 0.02); 
+    this.ratsEvent = 1 - (this.foodIncrement * 0.02); 
     if (this.ratsEvent < 0.85) { this.ratsEvent = 0.85; }
     this.plaugeEvent = 1 - ((this.foodIncrement * 0.005) + (this.troopsLost * 0.005));
-    if (this.plaugeEvent < 0.80) { this.plaugeEvent = 0.80; }
+    if (this.plaugeEvent < 0.85) { this.plaugeEvent = 0.85; }
     this.banditsEvent =  1 - (this.enemiesSurvived * 0.001);
     if (this.banditsEvent < 0.85 ) {this.banditsEvent = 0.85; }
     this.territoryStolen = 1 -  (this.enemiesSurvived * 0.002);
     if (this.territoryStolen < 0.85 ) {this.territoryStolen = 0.85; }
     this.troopsGhosts = 1 - (this.troopsLost * 0.001);
-    if (this.troopsGhosts < 0.35){ this.troopsGhosts = 0.35; }
+    if (this.troopsGhosts < 0.45){ this.troopsGhosts = 0.45; }
     this.enemyGhosts = 1 - (this.enemiesSurvived * 0.002);
     if (this.enemyGhosts < 0.85 ) {this.enemyGhosts = 0.85;}
 
@@ -73,7 +123,9 @@ const GameInstance = class {
     if (Math.random() > this.ratsEvent && this.foodSupply != 0) {
       this.foodSupply -= Math.floor(this.foodSupply * 0.40);
       if (this.foodSupply < 0) {this.foodSupply = 0; }
-      io.appendIntoElement("Rats invade your supply stores and eat a portion of your food supply.", "reports");
+      let events = ["Rats invade your storage and eat a large portion of your food supply.\n\n", "A group of starving children sneak into your storage and eat a portion of your food supply.\n\n", "Insects invaid your storage and destroy a portion of your food supply.\n\n"];
+      let num = randomInt(0, 2);
+      io.appendIntoElement(events[num], "reports");
       this.updateDisplay();
     }
   }
@@ -84,7 +136,9 @@ const GameInstance = class {
       if (died > this.troops) {died = this.troops; } 
       this.troops -= died;
       this.troopsLost += died;
-      io.appendIntoElement("A plauge runs throughout your army, resulting in the loss of "+died+" of your troops.", "reports");
+      let events = ["Troops within your army start to catch the plauge. "+died+" of your troops die before it can be contained.\n\n", "A sickness infects some of your troops, resulting in "+died+"deaths.\n\n"];
+      let num = randomInt(0, 1);
+      io.appendIntoElement(events[num], "reports");
       this.updateDisplay();
     }
   }
@@ -94,7 +148,9 @@ const GameInstance = class {
       let fundsLost = Math.floor(this.funds * 0.40);
       if (fundsLost > this.funds) {fundsLost = this.funds; }
       this.funds -= fundsLost;
-      io.appendIntoElement("Bandits snuck into your camp and stole a portion of your funds.", "reports");
+      let events = ["Bandits sneak into your camp and steal a portion of your funds.\n\n", "Beggars from a nearby town become desperate and sneak into your camp to steal a portion of your funds.\n\n"];
+      let num = randomInt(0, 1);
+      io.appendIntoElement(events[num], "reports");
       this.updateDisplay(); 
     }
   }
@@ -106,28 +162,28 @@ const GameInstance = class {
         if (type == 1 && this.farmlandsConquered != 0) {
           this.farmlandsConquered -= 1;
           if (game.strength != 0) { game.strength -= 1; }
-          io.appendIntoElement("Enemies that survived reclaimed a conquered farmland. Your troops have lost a bit of strengh.", "reports");
+          io.appendIntoElement("Enemies that survived reclaimed a conquered farmland. Your troops have lost a bit of strengh.\n\n", "reports");
           this.updateDisplay()
           break;
         }
         if (type == 2 && this.townsConquered != 0) {
           this.townsConquered -= 1;
           if (game.strength != 0) { game.strength -= 1; }
-          io.appendIntoElement("Enemies that survived reclaimed a conquered town. Your troops have lost a bit of strengh.", "reports");
+          io.appendIntoElement("Enemies that survived reclaimed a conquered town. Your troops have lost a bit of strengh.\n\n", "reports");
           this.updateDisplay()
           break;
         }
         if (type == 3 && this.fortressesConquered != 0) {
           this.fortressesConquered -= 1;
           if (game.strength > 1) { game.strength -= 1; }
-          io.appendIntoElement("Enemies that survived reclaimed a conquered fortress. Your troops have lost a bit of strengh.", "reports");
+          io.appendIntoElement("Enemies that survived reclaimed a conquered fortress. Your troops have lost a bit of strengh.\n\n", "reports");
           this.updateDisplay()
           break;
         }
         if (type == 4 && this.castlesConquered != 0) {
           this.castlesConquered -= 1;
           if (game.strength != 0) { game.strength -= 1; }
-          io.appendIntoElement("Enemies that survived reclaimed a conquered castle. Your troops have lost a bit of strengh.", "reports");
+          io.appendIntoElement("Enemies that survived reclaimed a conquered castle. Your troops have lost a bit of strengh.\n\n", "reports");
           this.updateDisplay()
           break;
         }
@@ -137,10 +193,11 @@ const GameInstance = class {
 
   enemyGhostEvent() {
     if (Math.random() > this.enemyGhosts) {
-      this.troops -= (this.troops * 0.25);
+      this.troops -= Math.ceil(this.troops * 0.25);
       if (this.troops < 0) {this.troops = 0;}
       if (this.morale > 0) {this.morale -= 1;}
-      io.appendIntoElement("Your camps is haunted by the ghosts of the fallen whom you defeated. A portion of your troops runs away in fear, while the rest are left with lowered morale.", "reports");
+      this.troopsCost += 2;
+      io.appendIntoElement("Your camp is haunted by the ghosts of the fallen whom you defeated. A portion of your troops run away in fear, while the rest are left with lowered morale.\n\n", "reports");
       this.updateDisplay();
     }
   }
@@ -162,7 +219,7 @@ const GameInstance = class {
       this.funds -= this.foodCost;
     }
     else {
-      io.appendIntoElement("Not enough funds", "reports");
+      io.appendIntoElement("You do not have enough funds to purchase more food.\n\n", "reports");
     }
     this.updateDisplay();
   }
@@ -173,12 +230,14 @@ const GameInstance = class {
         this.troops += 1; 
       }
       else {
-        io.appendIntoElement("The souls of your lost troops have scared away a potential soldier.", "reports");
+        let events = ["Your reputation has spread throughout the land, and troops are hesitant to join your army.\n\n", "The souls of your fallen troops have warned off a potential solider.\n\n", "A potential solider is scared off by the tales of your fallen troops.\n\n"]
+        let num = randomInt(0, 2)
+        io.appendIntoElement(events[num], "reports");
       }
       this.funds -= this.troopsCost;
     }
     else {
-      io.appendIntoElement("Not enough funds", "reports");
+      io.appendIntoElement("You do not have enough funds to recruit new troops.\n\n", "reports");
     }
     this.updateDisplay();
   }
@@ -193,7 +252,7 @@ const GameInstance = class {
       this.troops -= died;
       this.foodSupply -= (this.troops * this.foodNeed);
       this.troopsLost += died;
-      io.appendIntoElement(died+" of your troops starved to death", "reports");
+      io.appendIntoElement(died+" of your troops starved to death.\n\n", "reports");
     }
     this.updateDisplay();
   }
@@ -202,11 +261,11 @@ const GameInstance = class {
     if (this.pointsEarned >= 1) {
       this.strength += 1;
       this.pointsEarned -= 1;
-      io.appendIntoElement("Your troops have become stronger", "reports");
+      io.appendIntoElement("Your troops have become stronger.\n\n", "reports");
       this.updateDisplay();
     }
     else {
-      io.appendIntoElement("Not enough experience points", "reports");
+      io.appendIntoElement("You do not have enough points to increase your troops' strength.\n\n", "reports");
     }
   }
 
@@ -214,11 +273,11 @@ const GameInstance = class {
     if (this.pointsEarned >= 1) {
       this.morale += 1;
       this.pointsEarned -= 1;
-      io.appendIntoElement("You have increased morale amoung your troops", "reports");
+      io.appendIntoElement("You have increased morale amoung your troops.\n\n", "reports");
       this.updateDisplay();
     }
     else {
-      io.appendIntoElement("Not enough experience points", "reports");
+      io.appendIntoElement("You do not have enough points to increase your troops' morale.\n\n", "reports");
     }
   }
     
@@ -301,11 +360,15 @@ const FarmlandsClass = class {
         this.battleRunning = true;
         game.troops -= this.troopsAssigned;
         game.updateDisplay();
-        io.appendIntoElement("You have sent "+this.troopsAssigned+" of your troops out to conquer a farmland", "reports");
+        let string = "You have sent "+this.troopsAssigned+" of your troops out to conquer a farmland. "
+        string += grammars.GenerationSimple(farmland_conquest);
+        if (game.enemiesDefeated > 50 && game.farmlandsConquered > 6) { string += (grammars.GenerationSimple(spooky_event) + "\n\n"); }
+        else { string += "\n\n"; }
+        io.appendIntoElement(string, "reports");
       }
       else {
-        if (this.troopsAssigned == 0) { io.appendIntoElement("No troops assigned", "reports"); }
-        else { io.appendIntoElement("Not enough troops", "reports"); }
+        if (this.troopsAssigned == 0) { io.appendIntoElement("You have not assigned any troops to this farmland.\n\n", "reports"); }
+        else { io.appendIntoElement("You do not have the assigned number of troops available.\n\n", "reports"); }
       }
     }
   }
@@ -362,7 +425,7 @@ const FarmlandsClass = class {
           string += "You won the battle over the farmlands. ";
           game.farmlandsConquered += 1;
           string += "With these new farmlands, your food production has increased. ";
-          game.foodIncrement += 4;
+          game.foodIncrement += randomInt(1, 2);
           if (game.farmlandsConquered % 3 == 0) {
             game.pointsEarned += 1;
           }
@@ -379,6 +442,7 @@ const FarmlandsClass = class {
         }
         string += troopsSurvived+" of your troops returned from the battle, with a total of "+troopsLost+" losses. ";
         string += "You defeated "+enemiesDefeated+" of the enemy troops, but "+enemiesSurvived+" managed to escape with their lives.";
+        string += "\n\n";
         io.appendIntoElement(string, "reports");
         game.troops += troopsSurvived;
         game.troopsLost += troopsLost;
@@ -456,11 +520,15 @@ const TownClass = class {
         this.battleRunning = true;
         game.troops -= this.troopsAssigned;
         game.updateDisplay();
-        io.appendIntoElement("You have sent "+this.troopsAssigned+" of your troops out to conquer a town", "reports");
+        let string = "You have sent "+this.troopsAssigned+" of your troops out to conquer a town. "
+        string += grammars.GenerationSimple(town_conquest);
+        if (game.enemiesDefeated > 50 && game.townsConquered > 4) { string += (grammars.GenerationSimple(spooky_event) + "\n\n"); }
+        else { string += "\n\n"; }
+        io.appendIntoElement(string, "reports");
       }
       else {
-        if (this.troopsAssigned == 0) { io.appendIntoElement("No troops assigned", "reports"); }
-        else { io.appendIntoElement("Not enough troops", "reports"); }
+        if (this.troopsAssigned == 0) { io.appendIntoElement("You have not assigned any troops to this town.\n\n", "reports"); }
+        else { io.appendIntoElement("You do not have the assigned number of troops available.\n\n", "reports"); }
       }
     }
   }
@@ -536,6 +604,7 @@ const TownClass = class {
         }
         string += troopsSurvived+" of your troops returned from the battle safely, with a total of "+troopsLost+" losses. ";
         string += "You defeated "+enemiesDefeated+" of the enemy troops, but "+enemiesSurvived+" managed to escape with their lives.";
+        string += "\n\n";
         io.appendIntoElement(string, "reports");
         game.troops += troopsSurvived;
         game.troopsLost += troopsLost;
@@ -614,11 +683,15 @@ const FortressClass = class {
         this.battleRunning = true;
         game.troops -= this.troopsAssigned;
         game.updateDisplay();
-        io.appendIntoElement("You have sent "+this.troopsAssigned+" of your troops out to conquer a fortress", "reports");
+        let string = "You have sent "+this.troopsAssigned+" of your troops out to conquer a fortress. "
+        string += grammars.GenerationSimple(fortress_conquest);
+        if (game.enemiesDefeated > 50 && game.fortressesConquered > 2) { string += (grammars.GenerationSimple(spooky_event) + "\n\n"); }
+        else { string += "\n\n"; }
+        io.appendIntoElement(string, "reports");
       }
       else {
-        if (this.troopsAssigned == 0) { io.appendIntoElement("No troops assigned", "reports"); }
-        else { io.appendIntoElement("Not enough troops", "reports"); }
+        if (this.troopsAssigned == 0) { io.appendIntoElement("You have no assigned any troops to this fortress.\n\n", "reports"); }
+        else { io.appendIntoElement("You do not have the assigned number of troops available.\n\n", "reports"); }
       }
     }
   }
@@ -696,6 +769,7 @@ const FortressClass = class {
         }
         string += troopsSurvived+" of your troops returned from the battle safely, with a total of "+troopsLost+" losses. ";
         string += "You defeated "+enemiesDefeated+" of the enemy troops, but "+enemiesSurvived+" managed to escape with their lives.";
+        string += "\n\n";
         io.appendIntoElement(string, "reports");
         game.troops += troopsSurvived;
         game.troopsLost += troopsLost;
@@ -774,11 +848,15 @@ const CastleClass = class {
         this.battleRunning = true;
         game.troops -= this.troopsAssigned;
         game.updateDisplay();
-        io.appendIntoElement("You have sent "+this.troopsAssigned+" of your troops out to conquer a castle", "reports");
+        let string = "You have sent "+this.troopsAssigned+" of your troops out to conquer a castle. "
+        string += grammars.GenerationSimple(castle_conquest);
+        if (game.enemiesDefeated > 50 && game.castlesConquered > 2) { string += (grammars.GenerationSimple(spooky_event) + "\n\n"); }
+        else { string += "\n\n"; }
+        io.appendIntoElement(string, "reports");
       }
       else {
-        if (this.troopsAssigned == 0) { io.appendIntoElement("No troops assigned", "reports"); }
-        else { io.appendIntoElement("Not enough troops", "reports"); }
+        if (this.troopsAssigned == 0) { io.appendIntoElement("You have not assigned any troops to this castle.\n\n", "reports"); }
+        else { io.appendIntoElement("You do not have the assigned number of troops available.\n\n", "reports"); }
       }
     }
   }
@@ -836,11 +914,11 @@ const CastleClass = class {
           game.castlesConquered += 1;
           game.pointsEarned += 2;
           if (game.castlesConquered == 1) {
-            game.fundsIncrement += 8;
+            game.fundsIncrement += 2;
             string += "You have increased the rate of your funds accumulation. ";
           }
           if (game.castlesConquered % 2 == 0) {
-            game.fundsIncrement += 8;
+            game.fundsIncrement += 2;
             string += "You have increased the rate of your funds accumulation. ";
           }
           if (game.castlesConquered % 3 == 0) {
@@ -856,6 +934,7 @@ const CastleClass = class {
         }
         string += troopsSurvived+" of your troops returned from the battle safely, with a total of "+troopsLost+" losses. ";
         string += "You defeated "+enemiesDefeated+" of the enemy troops, but "+enemiesSurvived+" managed to escape with their lives.";
+        string += "\n\n";
         io.appendIntoElement(string, "reports");
         game.troops += troopsSurvived;
         game.troopsLost += troopsLost;
@@ -875,11 +954,23 @@ const CastleClass = class {
     io.writeValueIntoClass(this.troopsAssigned, "castleAssignedTroops");
     io.writeValueIntoClass(this.time, "castleTime");
   }
+}
 
+function checkStats() {
+  //console.log(strengthMax, moraleMax);
+  if (game.strength > strengthMax || currFarmland.strength > strengthMax || currTown.strength > strengthMax || currFortress.strength > strengthMax || currCastle.strength > strengthMax) {
+    strengthMax = math.ceil(strengthMax * 1.5); 
+  }
+  if (game.morale > moraleMax || currFarmland.morale > moraleMax || currTown.morale > moraleMax || currFortress.morale > moraleMax || currCastle.morale > moraleMax) {
+    moraleMax = math.ceil(moraleMax * 1.5); 
+  }
 }
 
 // this function forom JQuery waits until the web page is fully loaded before triggering the start of the game
 $( document ).ready(function() {
+  strengthMax = 30;
+  moraleMax = 25;
+
   game = new GameInstance();
   game.narrativeManager.setup();
   currFarmland = new FarmlandsClass();
@@ -898,6 +989,7 @@ $( document ).ready(function() {
 
   // Run the Loop
   gameTimer = setInterval(function(){
+    checkStats()
     game.increaseFunds()
     game.narrativeManager.assess()
     game.updateEvents()
