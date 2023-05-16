@@ -1,6 +1,6 @@
 // list which resources you want to track
 
-trackedValues = ["funds", "foodSupply", "troops", "troopsLost"]
+trackedValues = ["funds", "foodSupply", "troops", "troopsLost", "strength", "morale", "castlesConquered", "fortressesConquered", "townsConquered", "farmlandsConquered"]
 
 
 

@@ -1,6 +1,8 @@
 const strengthMax = 30;
 const moraleMax = 25;
 
+// ghosts of enemies scare away troops and prices increase
+
 const GameInstance = class {
   constructor() {
     this.narrativeManager = new narrativeManager(this)
@@ -34,7 +36,113 @@ const GameInstance = class {
     this.fortressesConquered = 0;
     this.townsConquered = 0;
     this.farmlandsConquered = 0;
-    
+
+    // story events
+    this.ratsEvent = 1;
+    this.plaugeEvent = 1;
+    this.banditsEvent = 1;
+    this.territoryStolen = 1;
+    this.troopsGhosts = 1;
+    this.enemyGhosts = 1; // still need to do
+  }
+
+  updateEvents() {
+    // set values
+    this.ratsEvent = 1 - ((this.foodIncrement / 4) * 0.02); 
+    if (this.ratsEvent < 0.85) { this.ratsEvent = 0.85; }
+    this.plaugeEvent = 1 - ((this.foodIncrement * 0.005) + (this.troopsLost * 0.005));
+    if (this.plaugeEvent < 0.80) { this.plaugeEvent = 0.80; }
+    this.banditsEvent =  1 - (this.enemiesSurvived * 0.001);
+    if (this.banditsEvent < 0.85 ) {this.banditsEvent = 0.85; }
+    this.territoryStolen = 1 -  (this.enemiesSurvived * 0.002);
+    if (this.territoryStolen < 0.85 ) {this.territoryStolen = 0.85; }
+    this.troopsGhosts = 1 - (this.troopsLost * 0.001);
+    if (this.troopsGhosts < 0.35){ this.troopsGhosts = 0.35; }
+    this.enemyGhosts = 1 - (this.enemiesSurvived * 0.002);
+    if (this.enemyGhosts < 0.85 ) {this.enemyGhosts = 0.85;}
+
+    // console.log("rats="+this.ratsEvent);
+    // console.log("plauge="+this.plaugeEvent);
+    // console.log("bandits="+this.banditsEvent);
+    // console.log("territory="+this.territoryStolen);
+    // console.log("troopGhost="+this.troopsGhosts);
+    // console.log("enemyGhosts="+this.enemyGhosts);
+  }
+
+  ratEventTrigger() {
+    if (Math.random() > this.ratsEvent && this.foodSupply != 0) {
+      this.foodSupply -= Math.floor(this.foodSupply * 0.40);
+      if (this.foodSupply < 0) {this.foodSupply = 0; }
+      io.appendIntoElement("Rats invade your supply stores and eat a portion of your food supply.", "reports");
+      this.updateDisplay();
+    }
+  }
+
+  plaugeEventTrigger(){
+    if (Math.random() > this.plaugeEvent && this.troops != 0) {
+      let died = Math.floor(this.troops * 0.60);
+      if (died > this.troops) {died = this.troops; } 
+      this.troops -= died;
+      this.troopsLost += died;
+      io.appendIntoElement("A plauge runs throughout your army, resulting in the loss of "+died+" of your troops.", "reports");
+      this.updateDisplay();
+    }
+  }
+
+  banditsEventTrigger() {
+    if (Math.random() > this.banditsEvent && this.funds != 0) {
+      let fundsLost = Math.floor(this.funds * 0.40);
+      if (fundsLost > this.funds) {fundsLost = this.funds; }
+      this.funds -= fundsLost;
+      io.appendIntoElement("Bandits snuck into your camp and stole a portion of your funds.", "reports");
+      this.updateDisplay(); 
+    }
+  }
+
+  territoryStolenEvent() {
+    if (Math.random() > this.territoryStolen && (this.farmlandsConquered + this.townsConquered + this.fortressesConquered + this.castlesConquered) != 0) {
+      while (true) {
+        let type = randomInt(1, 4);
+        if (type == 1 && this.farmlandsConquered != 0) {
+          this.farmlandsConquered -= 1;
+          if (game.strength != 0) { game.strength -= 1; }
+          io.appendIntoElement("Enemies that survived reclaimed a conquered farmland. Your troops have lost a bit of strengh.", "reports");
+          this.updateDisplay()
+          break;
+        }
+        if (type == 2 && this.townsConquered != 0) {
+          this.townsConquered -= 1;
+          if (game.strength != 0) { game.strength -= 1; }
+          io.appendIntoElement("Enemies that survived reclaimed a conquered town. Your troops have lost a bit of strengh.", "reports");
+          this.updateDisplay()
+          break;
+        }
+        if (type == 3 && this.fortressesConquered != 0) {
+          this.fortressesConquered -= 1;
+          if (game.strength > 1) { game.strength -= 1; }
+          io.appendIntoElement("Enemies that survived reclaimed a conquered fortress. Your troops have lost a bit of strengh.", "reports");
+          this.updateDisplay()
+          break;
+        }
+        if (type == 4 && this.castlesConquered != 0) {
+          this.castlesConquered -= 1;
+          if (game.strength != 0) { game.strength -= 1; }
+          io.appendIntoElement("Enemies that survived reclaimed a conquered castle. Your troops have lost a bit of strengh.", "reports");
+          this.updateDisplay()
+          break;
+        }
+      }
+    }
+  }
+
+  enemyGhostEvent() {
+    if (Math.random() > this.enemyGhosts) {
+      this.troops -= (this.troops * 0.25);
+      if (this.troops < 0) {this.troops = 0;}
+      if (this.morale > 0) {this.morale -= 1;}
+      io.appendIntoElement("Your camps is haunted by the ghosts of the fallen whom you defeated. A portion of your troops runs away in fear, while the rest are left with lowered morale.", "reports");
+      this.updateDisplay();
+    }
   }
   
   // the following functions are to be called from buttons in the index.html
@@ -61,7 +169,12 @@ const GameInstance = class {
 
   purchaseTroops() {
     if ((this.funds - this.troopsCost) >= 0) {
-      this.troops += 1; 
+      if (!(Math.random() > this.troopsGhosts)) {
+        this.troops += 1; 
+      }
+      else {
+        io.appendIntoElement("The souls of your lost troops have scared away a potential soldier.", "reports");
+      }
       this.funds -= this.troopsCost;
     }
     else {
@@ -248,20 +361,14 @@ const FarmlandsClass = class {
         if (success == 1) {
           string += "You won the battle over the farmlands. ";
           game.farmlandsConquered += 1;
-          if (game.farmlandsConquered == 1) {
-            string += "With these new farmlands, your food production has increased. ";
-            game.foodIncrement += 1;
-          }
+          string += "With these new farmlands, your food production has increased. ";
+          game.foodIncrement += 4;
           if (game.farmlandsConquered % 3 == 0) {
-            string += "With these new farmlands, your food production has increased. ";
-            game.foodIncrement += 1;
+            game.pointsEarned += 1;
           }
           if (game.farmlandsConquered % 4 == 0) {
             game.foodNeed += 1;
             game.foodCost += 5;
-          }
-          if (game.farmlandsConquered % 5 == 0) {
-            game.pointsEarned += 1;
           }
         }
         else if (success == -1) {
@@ -413,7 +520,7 @@ const TownClass = class {
             string += "You have persuaded "+this.reward+" troops to join your cause. ";
             game.troops += this.reward;
           }
-          if (game.townsConquered % 4 == 0) {
+          if (game.townsConquered % 2 == 0) {
             game.pointsEarned += 1;
           }
           if (game.townsConquered % 3 == 0) {
@@ -469,6 +576,7 @@ const FortressClass = class {
     this.troopsAssigned = 0;
     this.battleRunning = false;
     this.reward = Math.ceil(this.troops / 4);
+    this.moneyReward = this.troops * 4;
 
     this.time = 2 * this.troops;
 
@@ -566,17 +674,18 @@ const FortressClass = class {
         if (success == 1) {
           string += "You've won the battle over the fortress. ";
           game.fortressesConquered += 1;
+          game.pointsEarned += 1;
+          game.funds += this.moneyReward;
           if (game.fortressesConquered == 1) {
             string += "You have persuaded "+this.reward+" troops to join your cause. ";
             game.troops += this.reward;
           }
           if (game.fortressesConquered % 2 == 0) {
             game.troops += this.reward;
-            game.pointsEarned += 1;
             string += "You have persuaded "+this.reward+" troops to join your cause. ";
           }
           if (game.fortressesConquered % 3 == 0) {
-            game.troopsCost += 10;
+            game.troopsCost += 5;
           }
         }
         else if (success == -1) {
@@ -725,16 +834,16 @@ const CastleClass = class {
         if (success == 1) {
           string += "You've won the battle over the castle. ";
           game.castlesConquered += 1;
+          game.pointsEarned += 2;
           if (game.castlesConquered == 1) {
-            game.fundsIncrement += 2;
+            game.fundsIncrement += 8;
             string += "You have increased the rate of your funds accumulation. ";
           }
           if (game.castlesConquered % 2 == 0) {
-            game.pointsEarned += 1;
+            game.fundsIncrement += 8;
             string += "You have increased the rate of your funds accumulation. ";
           }
           if (game.castlesConquered % 3 == 0) {
-            game.fundsIncrement += 2;
             game.foodCost += 10;
             game.troopsCost += 15;
           }
@@ -791,6 +900,7 @@ $( document ).ready(function() {
   gameTimer = setInterval(function(){
     game.increaseFunds()
     game.narrativeManager.assess()
+    game.updateEvents()
     game.updateDisplay()
     currFarmland.updateDisplay()
     currFarmland.runBattle()
@@ -803,11 +913,25 @@ $( document ).ready(function() {
   }, 500)
 
   gameTimer = setInterval(function() {
+    game.banditsEventTrigger()
+  }, 7000)
+
+  gameTimer = setInterval(function() {
+    game.territoryStolenEvent()
+  }, 32000)
+
+  gameTimer = setInterval(function() {
+    game.enemyGhostEvent()
+  }, 30000)
+
+  gameTimer = setInterval(function() {
     game.feedTroops()
-  }, 20000)
+    game.plaugeEventTrigger()
+  }, 18000)
 
   gameTimer = setInterval(function(){
     game.increaseFood()
-  }, 10000)
+    game.ratEventTrigger()
+  }, 9000)
   
 })

@@ -2,8 +2,6 @@
 
 // each "beat" has a test function, a function which unlocks elements, and a report function
 
-// events to add - rats eat food, troops die in plauge, bandits steal money, enemies that survived steal back a territory, ghosts of enemies scare away troops and prices increase, dead troops increase risk that you cant buy any troops
-
 const narrativeManager = class {
   constructor(parentObject) {
   this.data = parentObject;
