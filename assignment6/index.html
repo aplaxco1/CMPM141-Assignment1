@@ -41,18 +41,42 @@
     <table>
     <tr> <td>
     <table style="width:120%">
-    <tr><td>Funds</td> <td> </td> <td class="currentFunds"></td></tr>
+    <tr><td>Funds</td> <td></td> <td class="currentFunds"></td></tr>
     <tr id="foodSupplyRow"><td> Food Supply</td> <td></td> <td class="currentFoodSupply"></td><td><button onclick=game.purchaseFood()> Purchase Food</button></td><td>Cost<td class="foodCost"></td></td></tr>
     <tr id="troopsRow"><td> Troops</td> <td></td> <td class="currentTroops"></td><td><button onclick=game.purchaseTroops()> Purchase Troops</button></td><td>Cost<td class="troopsCost"></td></td></tr>
+    <tr id="troopsLostRow"><td> Troops Lost</td> <td></td> <td class="totalTroopsLost"></td></tr>
     </table>
-
-
+    <hr style="width:120%">
+    <table id="ConquestTable">
+      <tr><td>Farmlands Conquered</td> <td></td> <td class="totalFarmlands"></td></tr>
+      <tr><td>Towns Conquered</td> <td></td> <td class="totalTowns"></td></tr>
+      <tr><td>Fortresses Conquered</td> <td></td> <td class="totalFortresses"></td></tr>
+      <tr><td>Castles Conquered</td> <td></td> <td class="totalCastles"></td></tr>
+    </table>
+  </table>
   </div>
 
   
   <div class="panel"  id="panel2">
-  <h1> Panel 2</h1>
-
+  <table>
+    <tr> <td>
+    <table style="width:40%">
+      <tr><td><b>Your Troop Statistics</b></td></tr>
+      <tr><td>Troops:</td><td class = "currentTroops"></td></tr>
+      <tr><td>Strength:</td><td class = "currentStrength"><td><button onclick=game.increaseStrength()>↑</button></td></tr>
+      <tr><td>Morale:</td><td class = "currentMorale"></td><td><button onclick=game.increaseMorale()>↑</button></td></tr>
+      <tr><td>Avaliable Points:</td><td class = "points"></td></tr>
+    </table>
+    <hr style="width:120%">
+    <table style="width:120%">
+    <tr><td><b>Farmland</b><td> <td></td> <td><b>Town</b></td> <td></td> <td></td> <td><b>Fortress</b></td> <td></td> <td></td> <td><b>Catsle</b></td> <td></td> <td></td> </tr>
+    <tr><td>Troops:</td><td class = "farmlandTroops"></td><td></td> <td>Troops:</td><td class = "townTroops"></td><td></td> <td>Troops:</td><td class = "fortressTroops"></td><td></td> <td>Troops:</td><td class = "castleTroops"></td><td></td></tr>
+    <tr><td>Strength:</td><td class = "farmlandStrength"></td><td></td> <td>Strength:</td><td class = "townStrength"></td><td></td> <td>Strength:</td><td class = "fortressStrength"></td><td></td> <td>Strength:</td><td class = "castleStrength"></td><td></td></tr>
+    <tr><td>Morale:</td><td class = "farmlandMorale"></td><td></td> <td>Morale:</td><td class = "townMorale"></td><td></td> <td>Morale:</td><td class = "fortressMorale"></td><td></td> <td>Morale:</td><td class = "castleMorale"></td><td></td></tr>
+    <tr><td>Assigned Troops:</td><td class = "farmlandAssignedTroops"></td><td><button onclick=currFarmland.addTroops()>↑</button><button onclick=currFarmland.removeTroops()>↓</button></td> <td>Assigned Troops:</td><td class = "townAssignedTroops"></td><td><button onclick=currTown.addTroops()>↑</button><button onclick=currTown.removeTroops()>↓</button></td> <td>Assigned Troops:</td><td class = "fortressAssignedTroops"></td><td><button onclick=currFortress.addTroops()>↑</button><button onclick=currFortress.removeTroops()>↓</button></td> <td>Assigned Troops:</td><td class = "castleAssignedTroops"></td><td><button onclick=currCastle.addTroops()>↑</button><button onclick=currCastle.removeTroops()>↓</button></td></tr>
+    <tr><td><button onclick=currFarmland.startBattle()>Begin Conquest</button></td><td id = "farmlandTimer">Timer:<td id = "farmlandTimerNum" class = "farmlandTime"></td> <td><button onclick=currTown.startBattle()>Begin Conquest</button></td><td id = "townTimer">Timer:<td id = "townTimerNum" class = "townTime"></td> <td><button onclick=currFortress.startBattle()>Begin Conquest</button></td><td id = "fortressTimer">Timer:<td id = "fortressTimerNum" class = "fortressTime"></td> <td><button onclick=currCastle.startBattle()>Begin Conquest</button></td><td id = "castleTimer">Timer:<td id = "castleTimerNum" class = "castleTime"></td><td></td></tr>
+    </table>
+  </table>
   </div>
 
 
