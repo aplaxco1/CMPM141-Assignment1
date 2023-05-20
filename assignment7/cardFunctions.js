@@ -1,6 +1,18 @@
+catDecks = ["whiskers", "mittens", "meowy", "bean", "mochi", "pumpkin", "pickles", "luna", "shadow", "peanut"];
+adoptedCats = [];
 
+function addRandomPack() {
+  if (catDecks.length == 0) { alert ("no more cats to adopt!"); }
+  else {
+    shuffleDeck(catDecks);
+    let catToAdopt = catDecks.pop();
+    addPackToDeck(catToAdopt);
+  }
+}
 
-
+function catIsAdopted(catAdopted) {
+  adoptedCats.push(catAdopted);
+}
 
 deck= [];
 
@@ -13,6 +25,14 @@ function addToTopDeck(card, fromPool=true){
 }
 function drawFromDeck(){
   if (deck.length ==0) alert ("out of cards :(")
+  while (true) {
+    if (deck[0].pack in adoptedCats) {
+      deck.pop();
+    } 
+    else {
+      break;
+    }
+  }
   return deck.pop();
 }
 function shuffleIntoDeck(card, fromPool=true){

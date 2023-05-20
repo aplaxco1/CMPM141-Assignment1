@@ -1,67 +1,51 @@
 
 firstCard = {
-  prompt: "Isn't painting Wonderful???",
-  rightChoiceText: "I LOVE PAINTING",
+  prompt: "Welcome to the Cat Adoption Center game!",
+  rightChoiceText: "How do I play?",
   rightChoice: function(){
-    addResource("veggies", 20)
-      addPackToDeck("bumbling")
-    addToTopDeck("VanGoghHappy")
+      addToTopDeck("explaination")
     },
   
-  leftChoiceText: "PAINTING SUCKS", 
+  leftChoiceText: "I'm ready to start!", 
   leftChoice: function(){
-    addResource("meat", 20)
-      addPackToDeck("bumbling")
-    addToTopDeck("VanGoghBetrayed")
-    enemiesMade += 1;
+    cats += 2; 
+    addRandomPack()
+    addRandomPack()
+    addPackToDeck("adoptableCats")
   },
-  name: "Van Gogh",
+  name: "Narrator",
   resultText: "",
-  image: "./images/VanGosh.png",
+  image: "./images/NarratorCat.jpg",
   priority: 1,
   pack : "none"
 }
 
 
 cardPool = {
-  "uniqueIDList" : ["VanGoghHappy", "VanGoghBetrayed"],
+  "uniqueIDList" : ["explaination"],
   
-  "VanGoghHappy" : {
-    prompt: "Really? Let's be friends",
-    rightChoiceText: "Lol Okay",
+  "explaination" : {
+    prompt: "Your goal is to take care of the cats in your shelter until they are adopted by loving families. To do so, you need to maintan a stable level of cuteness, happiness, and fierceness of the cats at your shelter so that people will be enouraged to adopt them!",
+    rightChoiceText: "Got it!",
       rightChoice: function(){
-      addResource("veggies", 10)
+        cats += 2; 
+        addRandomPack()
+        addRandomPack()
+        addPackToDeck("adoptableCats")
       },
-    leftChoiceText: "XD HAHA. . .No", 
+    leftChoiceText: "Alright lets go!", 
     leftChoice: function(){
-      addResource("meat", 20)
-      addToTopDeck("VanGoghBetrayed")
-    enemiesMade += 1;
+      cats += 2; 
+        addRandomPack()
+        addRandomPack()
+        addPackToDeck("adoptableCats")
     },
-    name: "Van Gogh",
+    name: "Narrator",
     resultText: "",
-    image: "./images/VanGosh.png",
+    image: "./images/NarratorCat.jpg",
     priority: 2,
     pack : "none"
   },
-
-
-  "VanGoghBetrayed": {
-    prompt: "To Heck with you",
-    rightChoiceText: ". . . ",
-      rightChoice: function(){
-      addResource("veggies", 20)
-      },
-    leftChoiceText: "Fine. . . ", 
-    leftChoice: function(){
-      addResource("meat", 100)
-    },
-    name: "Van Gogh",
-    resultText: "",
-    image: "./images/VanGosh.png",
-    priority: 2,
-    pack : "none"
-  }
 
 }
 
