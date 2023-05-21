@@ -23,31 +23,33 @@ function addToTopDeck(card, fromPool=true){
   console.log(card)
 }
 function drawFromDeck(){
-  let theCard;
   while (true) {
-    if (deck.length ==0) {
-      if (cats == 0) {
-        addToTopDeck("allCatsAdopted"); // MAKE THIS CARD
-        return;
-      }
-      else {
-        addToTopDeck("adoptionCenterRunningSmoothly"); // MAKE THIS CARD
-        return;
-      }
-    }
+    if (deck.length > 0) {
     let curr = deck.pop();
     let adoptedAlready = false;
     for (x in adoptedCats) {
-      console.log(adoptedCats[x], curr.pack);
       if (adoptedCats[x] == curr.pack) {
         adoptedAlready = true;
       }
     }
     if (!adoptedAlready) {
       return curr;
+    } 
+  }
+  else {
+    break;
+  }
+}
+  if (deck.length == 0) {
+    if (cats == 0) {
+      return cardPool[cardPool.uniqueIDList[1]];
+    }
+    else {
+      return cardPool[cardPool.uniqueIDList[2]];
     }
   }
 }
+
 function shuffleIntoDeck(card, fromPool=true){
   addToTopDeck(card, fromPool)
   deck = shuffleDeck(deck)

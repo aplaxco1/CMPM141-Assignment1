@@ -9,10 +9,18 @@ let falling = false;  // is a card currently falling
 let setup = false;
 
 
-let anxiety = 40 // how anxious the speaker is
+let anxiety = 10 // how anxious the speaker is
+
+function updateAnxiety() {
+  if (resources[3].value <= 25) {anxiety = 40}
+  else if (resources[3].value <= 50) {anxiety = 30}
+  else if (resources[3].value <= 75) {anxiety = 20}
+  else {anxiety = 10}
+}
 
 
 function insertCardInfo(card) {
+  console.log(card);
   document.getElementById("textRight").innerHTML = card.rightChoiceText;
   document.getElementById("textLeft").innerHTML =  card.leftChoiceText;
   document.getElementById("resultText").innerHTML = card.resultText;
@@ -117,6 +125,8 @@ $( document ).ready( function(){
 
 
 function updateUI(){
+
+  updateAnxiety();
   
   //console.log(mousePos);
   updatePlayerData()

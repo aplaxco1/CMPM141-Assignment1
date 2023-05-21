@@ -22,7 +22,7 @@ firstCard = {
 
 
 cardPool = {
-  "uniqueIDList" : ["explaination", "allCatsAdopted", "adoptionCenterRunningSmoothly"],
+  "uniqueIDList" : ["explaination", "allCatsAdopted", "runningSmoothly"],
   
   "explaination" : {
     prompt: "Your goal is to take care of the cats in your shelter until they are adopted by loving families. To do so, you need to maintan a stable level of cuteness, happiness, and fierceness of the cats at your shelter so that people will be enouraged to adopt them!",
@@ -47,7 +47,7 @@ cardPool = {
     pack : "none"
   },
 
-  "allCatsAdopted": {
+  "allCatsAdopted" : {
     prompt: "All of the cats from your adoption center have been adopted by loving families! Congratulations!",
     rightChoiceText: "Lets play again!",
       rightChoice: function(){
@@ -64,7 +64,7 @@ cardPool = {
     pack : "none"
   },
 
-  "adoptionCenterRunningSmoothly": {
+  "runningSmoothly" : {
     prompt: "While not all of the cats at your adoption center have been adopted, everything is still going very well! These remaining cats will likely be adopted in the near future!",
     rightChoiceText: "Lets play again!",
       rightChoice: function(){
