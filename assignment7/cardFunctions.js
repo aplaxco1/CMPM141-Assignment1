@@ -1,10 +1,9 @@
 catDecks = ["whiskers", "mittens", "meowy", "bean", "mochi", "pumpkin", "pickles", "luna", "shadow", "peanut"];
-adoptedCats = [];
 
 function addRandomPack() {
   if (catDecks.length == 0) { alert ("no more cats to adopt!"); }
   else {
-    shuffleDeck(catDecks);
+    catDecks = catDecks.sort((a, b) => 0.5 - Math.random());
     let catToAdopt = catDecks.pop();
     addPackToDeck(catToAdopt);
   }
@@ -24,20 +23,34 @@ function addToTopDeck(card, fromPool=true){
   console.log(card)
 }
 function drawFromDeck(){
-  if (deck.length ==0) alert ("out of cards :(")
+  let theCard;
   while (true) {
-    if (deck[0].pack in adoptedCats) {
-      deck.pop();
-    } 
-    else {
-      break;
+    if (deck.length ==0) {
+      if (cats == 0) {
+        addToTopDeck("allCatsAdopted"); // MAKE THIS CARD
+        return;
+      }
+      else {
+        addToTopDeck("adoptionCenterRunningSmoothly"); // MAKE THIS CARD
+        return;
+      }
+    }
+    let curr = deck.pop();
+    let adoptedAlready = false;
+    for (x in adoptedCats) {
+      console.log(adoptedCats[x], curr.pack);
+      if (adoptedCats[x] == curr.pack) {
+        adoptedAlready = true;
+      }
+    }
+    if (!adoptedAlready) {
+      return curr;
     }
   }
-  return deck.pop();
 }
 function shuffleIntoDeck(card, fromPool=true){
   addToTopDeck(card, fromPool)
-  shuffleDeck(deck)
+  deck = shuffleDeck(deck)
 }
 
 // shuffles the deck and then arranges by priority

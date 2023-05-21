@@ -99,7 +99,6 @@ $( document ).ready( function(){
   activeCard = document.getElementById("activeCard");
   cardStack = document.getElementById("cardStack");
   cardOrigin = cardStack.offsetLeft 
-  
 
   window.addEventListener('mousemove', (event) => {
     mousePos = { x: event.clientX, y: event.clientY }

@@ -35,18 +35,16 @@ function updateMeters() {
 function checkFail() {
   failures = []
     for (x in resources) {
-      if (resources[x].value > 100) {failures.push({resource: resources[x].key, level: "high"})}
-      if (resources[x].value < 0) {failures.push({rsource: resources[x].key, level: "low"})}
+      if (resources[x].value >= 100 && resources[x].key != "money") {failures.push({resource: resources[x].key, level: "high"})}
+      if (resources[x].value <= 0) {failures.push({resource: resources[x].key, level: "low"})}
   }
    console.log(failures)
   for (x in failures){
     let f = failures[x];
     for ( i in failCards){
       let failCard = failCards[i];
-      if (failCard.resource === f.resource && failCard.level === f.level)
+      if (failCard.resource == f.resource && failCard.level == f.level)
         addToTopDeck(failCard.card, false)
-      else
-        addToTopDeck(defaultFailCard, false)
     }
     
   }

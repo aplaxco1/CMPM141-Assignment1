@@ -8,7 +8,7 @@ firstCard = {
   
   leftChoiceText: "I'm ready to start!", 
   leftChoice: function(){
-    cats += 2; 
+    cats += 2;
     addRandomPack()
     addRandomPack()
     addPackToDeck("adoptableCats")
@@ -22,7 +22,7 @@ firstCard = {
 
 
 cardPool = {
-  "uniqueIDList" : ["explaination"],
+  "uniqueIDList" : ["explaination", "allCatsAdopted", "adoptionCenterRunningSmoothly"],
   
   "explaination" : {
     prompt: "Your goal is to take care of the cats in your shelter until they are adopted by loving families. To do so, you need to maintan a stable level of cuteness, happiness, and fierceness of the cats at your shelter so that people will be enouraged to adopt them!",
@@ -47,6 +47,39 @@ cardPool = {
     pack : "none"
   },
 
+  "allCatsAdopted": {
+    prompt: "All of the cats from your adoption center have been adopted by loving families! Congratulations!",
+    rightChoiceText: "Lets play again!",
+      rightChoice: function(){
+        location.reload();
+      },
+    leftChoiceText: "Lets play again!", 
+    leftChoice: function(){
+      location.reload();
+    },
+    name: "Narrator",
+    resultText: "",
+    image: "./images/NarratorCat.jpg",
+    priority: 2,
+    pack : "none"
+  },
+
+  "adoptionCenterRunningSmoothly": {
+    prompt: "While not all of the cats at your adoption center have been adopted, everything is still going very well! These remaining cats will likely be adopted in the near future!",
+    rightChoiceText: "Lets play again!",
+      rightChoice: function(){
+        location.reload();
+      },
+    leftChoiceText: "Lets play again!", 
+    leftChoice: function(){
+      location.reload();
+    },
+    name: "Narrator",
+    resultText: "",
+    image: "./images/NarratorCat.jpg",
+    priority: 2,
+    pack : "none"
+  }
 }
 
 
