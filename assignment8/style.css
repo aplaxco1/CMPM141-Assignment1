@@ -1,0 +1,71 @@
+  
+  
+  
+  body {
+    transition: background-color linear 1s;
+    
+  }
+  
+  h1 {
+    color:#beef;
+    font-size: 50pt;
+    
+  }
+  
+  strong {
+    color: #adadad;
+    font-size: 17.777pt;
+    
+  }
+  
+  body.phase1{
+    position:relative; 
+    background-color: #0000aa;
+    
+  }
+  
+  body.phase2{
+    position:relative; 
+    background-color: #440044;
+    color: yellow;
+    
+  }
+  
+  body.phase3 {
+    background-color: #990000;
+    color: white;
+  }
+  
+iframe{
+  
+  mix-blend-mode: difference;
+  
+}
+
+#hauntingEye {
+  pointer-events: none;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("./whaleEye.jpg");
+  mix-blend-mode: difference;
+  object-fit: fill;
+  
+  opacity: 0.0;
+  transition: opacity linear 10s;
+  
+  z-index: 5;
+}
+
+#hauntingEye.phase1 {
+    opacity: 0.2
+  }
+
+#hauntingEye.phase2 {
+    opacity: 0.5
+  }
+
+#hauntingEye.phase3 {
+    opacity: 0.8
+  }
+
