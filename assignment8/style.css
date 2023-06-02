@@ -1,39 +1,68 @@
   
-  
-  
   body {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
     transition: background-color linear 1s;
-    
+  }
+
+  a:link {
+    color: white;
+    text-decoration: underline;
+  }
+  
+  a:visited {
+    color: white;
+    text-decoration: underline;
+  }
+  
+  a:hover {
+    color: gray;
+    text-decoration: underline;
+  }
+
+  p {
+    color: white;
+    font-size: 18px;
   }
   
   h1 {
-    color:#beef;
-    font-size: 50pt;
-    
-  }
-  
-  strong {
-    color: #adadad;
-    font-size: 17.777pt;
-    
-  }
-  
-  body.phase1{
-    position:relative; 
-    background-color: #0000aa;
-    
-  }
-  
-  body.phase2{
-    position:relative; 
-    background-color: #440044;
-    color: yellow;
-    
-  }
-  
-  body.phase3 {
-    background-color: #990000;
     color: white;
+    font-size: 30pt;
+  }
+
+  h2 {
+    color: white;
+  }
+
+  h3 {
+    color: white;
+  }
+  
+  body.phase1 {
+    background-color: #C8C8C8;
+  }
+  
+  body.phase2 {
+    background-color: #A9A9A9;
+  }
+  
+  body.phase3{
+    background-color: #888888;
+  }
+  
+  body.phase4 {
+    background-color: #606060;
+  }
+
+  body.phase5 {
+    background-color: #383838;
+  }
+
+  body.phase6 {
+    background-color: #080808;
   }
   
 iframe{
@@ -42,30 +71,55 @@ iframe{
   
 }
 
-#hauntingEye {
+#shaky {
+  display: inline-block;
+}
+
+.storyText {
+  max-width: 600px;
+  margin: auto;
+  color: white;
+  font-size: 18px;
+}
+
+#hauntedCastle {
   pointer-events: none;
   position: absolute;
+  background-size: contain;
+  background-repeat: none;
+  background-position: center center;
   width: 100vw;
   height: 100vh;
-  background-image: url("./whaleEye.jpg");
+  background-image: url("./castle_painting.jpg");
   mix-blend-mode: difference;
   object-fit: fill;
   
   opacity: 0.0;
-  transition: opacity linear 10s;
+  transition: opacity linear 1s;
   
   z-index: 5;
 }
 
-#hauntingEye.phase1 {
-    opacity: 0.2
+#hauntedCastle.phase1 {
+    opacity: 0.0;
   }
 
-#hauntingEye.phase2 {
-    opacity: 0.5
+#hauntedCastle.phase2 {
+    opacity: 0.05;
   }
 
-#hauntingEye.phase3 {
-    opacity: 0.8
+#hauntedCastle.phase3 {
+    opacity: 0.15;
   }
 
+  #hauntedCastle.phase4 {
+    opacity: 0.25;
+  }
+
+  #hauntedCastle.phase5 {
+    opacity: 0.35;
+  }
+
+  #hauntedCastle.phase6 {
+    opacity: 0.5;
+  }

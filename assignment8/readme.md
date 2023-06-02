@@ -1,2 +1,2 @@
-Whale Eye: Ecohotel; Creative Commons; https://commons.wikimedia.org/wiki/File:Face_to_face_with_the_whale_under_water_-_panoramio.jpg
-Jonah and the Whale: Unknown; nPublic Domain: https://commons.wikimedia.org/wiki/File:Jonah_and_the_Whale,_Folio_from_a_Jami_al-Tavarikh_(Compendium_of_Chronicles).jpg
+Text Obtained From: https://moonmausoleum.com/the-outsider-by-h-p-lovecraft/
+Castle Image Obtained From: https://pixabay.com/illustrations/the-framework-painting-castle-torre-5940236/

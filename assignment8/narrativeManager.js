@@ -6,21 +6,28 @@ const narrativeManager = class {
   constructor() {
     this.data = {
       timeElapsed : 0,
-      possiblePhases : ["phase1", "phase2", "phase3"],
+      possiblePhases : ["phase1", "phase2", "phase3", "phase4", "phase5", "phase6"],
       phase : "phase1",
       beats : beats,
       beatsTriggered: [],
       
       pagesVisited: {},
-      
-      intensity: 0.05,
-   
-   
-      flicker : false,
-      flicker2 : false,
-      startWordReplacement : false,
+
+      shakeTime: 100,
+      shakeIntensity: 0,
+      scrollIntensity: 1,
+      textAdditionIntensity: 0.05,
+      textFlickerIntensity: 0.1,
+
+      shakeEnabled: false,
+      startPageScroll: false,
+      startTextAddition: false,
+      startTextFlicker: false,
    
     }
+
+    this.localTime = 0;
+
     for (let x in this.data.beats)
     this.data.beatsTriggered.push(false)
   }
@@ -104,24 +111,32 @@ const narrativeManager = class {
   }
   
   reset(){
-    
+    console.log("RESET");
     this.data = new narrativeManager().data;
   }
   
+
   loop(){
+
       this.data.timeElapsed += 1;
+      this.localTime += 1;
+
+      if (this.data.shakeEnabled) {
+        hauntings.shakeText(this.data.shakeTime, this.data.shakeIntensity);
+      }
+
+      if (this.localTime > 5) {
+        hauntings.pageScroll(this.data, this.data.scrollIntensity);
+      }
+      hauntings.textAddition(this.data, this.data.textAdditionIntensity);
       
-      
-      hauntings.flickerText(this.data.intensity, this.data.flicker)
-      hauntings.flickerImage(this.data.intensity, this.data.flicker2)
-      
-      if (this.data.startWordReplacement)
-        hauntings.textReplacement(this.data.intensity, this.data)
+      hauntings.flickerText(this.data.textFlickerIntensity, this.data.startTextFlicker)
+
+      // if (this.data.startWordReplacement)
+      //   hauntings.textReplacement(this.data.intensity, this.data)
         
       this.assess();
       
-      
-    
   }
   
   
