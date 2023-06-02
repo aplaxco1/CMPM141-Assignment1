@@ -69,6 +69,22 @@ const hauntings = class {
       }
     }
   }
+
+  static flickerMouse(data) {
+    if (data.enableFlickerMouse) {
+      var x = document.getElementsByTagName("*"); 
+      for (let i = 0; i < x.length; i++) {
+        if (Math.random() > 0.5) {
+          x[i].style.cursor = "none";
+        }
+        else {
+          x[i].style.cursor = "auto";
+        }
+      }
+    }
+  }
+
+
     
 
 }

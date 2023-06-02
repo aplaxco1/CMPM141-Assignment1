@@ -23,6 +23,7 @@ const narrativeManager = class {
       startPageScroll: false,
       startTextAddition: false,
       startTextFlicker: false,
+      enableFlickerMouse: false,
    
     }
 
@@ -135,6 +136,8 @@ const narrativeManager = class {
         hauntings.textAddition(this.data, this.data.textAdditionIntensity);
         hauntings.flickerText(this.data.textFlickerIntensity, this.data.startTextFlicker);
       }
+
+      hauntings.flickerMouse(this.data);
         
       this.assess();
       
