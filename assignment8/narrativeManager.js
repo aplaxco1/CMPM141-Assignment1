@@ -26,7 +26,9 @@ const narrativeManager = class {
    
     }
 
+    // variables that are reset upon page reload
     this.localTime = 0;
+    this.timeToStart = Math.random() * 5;
 
     for (let x in this.data.beats)
     this.data.beatsTriggered.push(false)
@@ -121,19 +123,18 @@ const narrativeManager = class {
       this.data.timeElapsed += 1;
       this.localTime += 1;
 
-      if (this.data.shakeEnabled) {
+      if (this.data.shakeEnabled && this.localTime > this.timeToStart) {
         hauntings.shakeText(this.data.shakeTime, this.data.shakeIntensity);
       }
 
-      if (this.localTime > 5) {
+      if (this.localTime > this.timeToStart && (this.data.timeElapsed % 2 == 0)) {
         hauntings.pageScroll(this.data, this.data.scrollIntensity);
       }
-      hauntings.textAddition(this.data, this.data.textAdditionIntensity);
-      
-      hauntings.flickerText(this.data.textFlickerIntensity, this.data.startTextFlicker)
 
-      // if (this.data.startWordReplacement)
-      //   hauntings.textReplacement(this.data.intensity, this.data)
+      if (this.localTime > this.timeToStart) {
+        hauntings.textAddition(this.data, this.data.textAdditionIntensity);
+        hauntings.flickerText(this.data.textFlickerIntensity, this.data.startTextFlicker);
+      }
         
       this.assess();
       
